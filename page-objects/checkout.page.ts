@@ -1,7 +1,6 @@
 import { Locator, Page } from "@playwright/test";
 
 export default class CheckoutPage {
-    private itemOrdered: Locator;
     readonly firstName: Locator;
     readonly lastName: Locator;
     readonly country: Locator;
@@ -11,7 +10,6 @@ export default class CheckoutPage {
     readonly placeOrderBtn: Locator;
 
     constructor(private page: Page) {
-        this.itemOrdered = this.itemOrdered;
         this.firstName = page.getByRole('textbox', { name: 'First name *' });
         this.lastName = page.getByRole('textbox', { name: 'Last name *' });
         this.country = page.getByLabel('Country / Region *');
@@ -22,10 +20,12 @@ export default class CheckoutPage {
     }
 
     async getItemOrdered(productName: string, quantity: number) {
-        return this.itemOrdered = this.page.getByRole('cell', { name: `${productName}  × ${quantity}` });
+        return this.page.getByRole('cell', { name: `${productName}  × ${quantity}` });
     }
 
-    async fillBillingDetails(firstName: string, lastName: string, country: string, streetAddress: string, city: string, phoneNum: string) {
+    async fillBillingDetails(param:{firstName: string, lastName: string, country: string, streetAddress: string, city: string, phoneNum: string}): Promise<void> {
+        const { firstName, lastName, country, streetAddress, city, phoneNum } = param;
+        
         await this.firstName.fill(firstName);
         await this.lastName.fill(lastName);
         await this.country.selectOption(country);

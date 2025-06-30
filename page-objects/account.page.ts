@@ -19,7 +19,7 @@ export default class AccountPage {
     }
 
     async goToPage(pageName: string) {
-        this.pageName = this.page.locator('#menu-main-menu-1').getByRole('link', { name: 'Shop' });
+        this.pageName = this.page.locator('#menu-main-menu-1').getByRole('link', { name: `${pageName}` });
         await this.pageName.click();
     }
 }

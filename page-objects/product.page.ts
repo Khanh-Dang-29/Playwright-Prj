@@ -23,30 +23,4 @@ export default class ProductPage {
         this.product = this.page.getByRole('link', { name: `${productName}`, exact: true });
         await this.product.click();
     }
-
-    async chooseRandomProd() {
-        await this.page.waitForSelector('.content-product');
-        const items = this.page.locator('.content-product ');
-        const count = await items.count();
-
-        if(count === 0) {
-            console.log('Không tìm thấy sản phẩm nào!');
-            return;
-        }
-
-        const randomIndex = Math.floor(Math.random() * count);
-        console.log(randomIndex);
-        const selected = items.nth(randomIndex);
-
-        const category = await selected.locator('.products-page-cats').locator('a').innerText();
-        const title = await selected.locator('.product-title').locator('a').innerText();
-        const price = await selected.locator('.price').locator('span').locator('bdi').innerText();
-        const rating = await selected.locator('.star-rating').getAttribute('aria-label');
-
-        const product = { category, title, price, rating };
-        console.log(product);
-        writeFileSync('selected-product.json', JSON.stringify(product, null, 2));
-
-        await this.page.getByRole('link', { name: `${title}`, exact: true }).click();
-    }
 }

@@ -1,8 +1,7 @@
 import { test as base, expect } from "@playwright/test";
-import { ENV } from "../env/env";
-import { Departments } from "../env/departments";
-import { Products } from "../env/products";
-import { PAGE_NAV } from "../env/pageNav";
+import { Departments } from "../dataTest/departments";
+import { PAGE_NAV } from "../dataTest/pageNav";
+import dotenv from 'dotenv';
 import HomePage from "../page-objects/home.page";
 import LoginPage from "../page-objects/login.page";
 import ProductPage from "../page-objects/product.page";
@@ -18,7 +17,7 @@ const test = base.extend<{ homePage: HomePage,
                         producPage: ProductPage, 
                         detailPage: DetailPage,
                         checkoutPage: CheckoutPage,
-                        orderStatusPage: OrderStatusPage
+                        orderStatusPage: OrderStatusPage,
                         shopPage: ShopPage }>({
     homePage: async ({ page }, use) => {
         const homePage = new HomePage(page);
@@ -28,8 +27,9 @@ const test = base.extend<{ homePage: HomePage,
     },
 
     loginPage: async ({ page }, use) => {
+        dotenv.config(); 
         const loginPage = new LoginPage(page);
-        await loginPage.login(ENV.USERNAME, ENV.PASSWORD);
+        await loginPage.login(process.env.USERNAME as string, process.env.PASSWORD as string);
         await use(loginPage);
     },
 
@@ -59,7 +59,14 @@ const test = base.extend<{ homePage: HomePage,
 })
 
 test("Verify users can buy an item successfully", async ({ page, accountPage, producPage, detailPage, checkoutPage, orderStatusPage }) => {
-
+    const billingDetails = {
+        firstName: 'Alice',
+        lastName: 'Smith',
+        country: 'United States (US)',
+        streetAddress: 'Oak Avenue',
+        city: 'Los Angeles',
+        phoneNum: '9876543210'
+    };
     // Step 1: Open browser and navigate to page
     // Step 2: Login with valid credentials
     // Step 3: Navigate to All departments section
@@ -80,8 +87,7 @@ test("Verify users can buy an item successfully", async ({ page, accountPage, pr
     // await expect(listDisplayProductView).toBeVisible();
 
     // Step 8: Select andy item randomly to purchase (DJI Mavic Pro Camera Drone)
-    await producPage.chooseProduct(Products.PROD_1);
-    // await producPage.chooseRandomProd();
+    await producPage.chooseProduct('DJI Mavic Pro Camera Drone');
 
     // Step 9: Click 'Add to Cart'
     await detailPage.addToCart();
@@ -97,11 +103,11 @@ test("Verify users can buy an item successfully", async ({ page, accountPage, pr
     await expect(page).toHaveTitle('Checkout – TestArchitect Sample Website');
 
     // Step 14: Verify item details in order
-    const itemOrdered = await checkoutPage.getItemOrdered(Products.PROD_1, 1);
+    const itemOrdered = await checkoutPage.getItemOrdered('DJI Mavic Pro Camera Drone', 1);
     await expect(itemOrdered).toBeVisible();
 
     // Step 15: Fill the billing details with default payment method
-    await checkoutPage.fillBillingDetails(ENV.FIRSNAME, ENV.LASTNAME, ENV.COUNTRY, ENV.STREET_ADDRESS, ENV.CITY, ENV.PHONE_NUMBER);
+    await checkoutPage.fillBillingDetails(billingDetails);
 
     // Step 16: Click on PLACE ORDER
     await checkoutPage.placeOrder();
@@ -110,7 +116,7 @@ test("Verify users can buy an item successfully", async ({ page, accountPage, pr
     await expect(page).toHaveURL(/.*order-received.*/);
 
     // Step 18: Verify the Order details with billing and item information
-    const orderItem = await orderStatusPage.getItemName(Products.PROD_1);
+    const orderItem = await orderStatusPage.getItemName('DJI Mavic Pro Camera Drone');
     await expect(orderItem).toBeVisible();
 })
 
