@@ -8,7 +8,7 @@ export default class HomePage {
     }
 
     async navigate() {
-        await this.page.goto("/");
+        await this.page.goto("https://demo.testarchitect.com/");
     }
 
     async goToLoginPage() {

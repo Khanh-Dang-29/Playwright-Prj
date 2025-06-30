@@ -1,7 +1,8 @@
-import { test, expect } from "@playwright/test";
+import { test as base, expect } from "@playwright/test";
 import { ENV } from "../env/env";
 import { Departments } from "../env/departments";
 import { Products } from "../env/products";
+import { PAGE_NAV } from "../env/pageNav";
 import HomePage from "../page-objects/home.page";
 import LoginPage from "../page-objects/login.page";
 import ProductPage from "../page-objects/product.page";
@@ -9,26 +10,63 @@ import DetailPage from "../page-objects/detail.page";
 import AccountPage from "../page-objects/account.page";
 import CheckoutPage from "../page-objects/checkout.page";
 import OrderStatusPage from "../page-objects/orderStatus.page";
+import ShopPage from "../page-objects/shop.page";
 
-test("Verify users can buy an item successfully", async ({ page }) => {
-    const homePage = new HomePage(page);
-    const loginPage = new LoginPage(page);
-    const accountPage = new AccountPage(page);
-    const producPage = new ProductPage(page);
-    const detailPage = new DetailPage(page);
-    const checkoutPage = new CheckoutPage(page);
-    const orderStatusPage = new OrderStatusPage(page);
+const test = base.extend<{ homePage: HomePage,
+                        loginPage: LoginPage,
+                        accountPage: AccountPage,
+                        producPage: ProductPage, 
+                        detailPage: DetailPage,
+                        checkoutPage: CheckoutPage,
+                        orderStatusPage: OrderStatusPage
+                        shopPage: ShopPage }>({
+    homePage: async ({ page }, use) => {
+        const homePage = new HomePage(page);
+        await homePage.navigate();
+        await homePage.goToLoginPage();
+        await use(homePage);
+    },
+
+    loginPage: async ({ page }, use) => {
+        const loginPage = new LoginPage(page);
+        await loginPage.login(ENV.USERNAME, ENV.PASSWORD);
+        await use(loginPage);
+    },
+
+    accountPage: async ({ page }, use) => {
+        await use(new AccountPage(page));
+    },
+
+    producPage: async ({ page }, use) => {
+        await use(new ProductPage(page));
+    },
+
+    detailPage: async ({ page }, use) => {
+        await use(new DetailPage(page));
+    },
+
+    checkoutPage: async ({ page }, use) => {
+        await use(new CheckoutPage(page));
+    },
+
+    orderStatusPage: async ({ page }, use) => {
+        await use(new OrderStatusPage(page));
+    },
+
+    shopPage: async ({ page }, use) => {
+        await use(new ShopPage(page));
+    },
+})
+
+test("Verify users can buy an item successfully", async ({ page, accountPage, producPage, detailPage, checkoutPage, orderStatusPage }) => {
 
     // Step 1: Open browser and navigate to page
-    await homePage.navigate();
-
     // Step 2: Login with valid credentials
-    await homePage.goToLoginPage();
-    await loginPage.login(ENV.USERNAME, ENV.PASSWORD);
-
     // Step 3: Navigate to All departments section
+    await accountPage.navigateToAllDepartmentsDropdown();
+
     // Step 4: Select Electronic Components & Supplies
-    await accountPage.goToPage(Departments.ELECTRONIC_COMPONENT_AND_SUPPLIES);
+    await accountPage.selectPage(Departments.ELECTRONIC_COMPONENT_AND_SUPPLIES);
 
     // Step 5: Verify the items should be displayed as a grid
     // const gridDisplayProductView = await producPage.getDisplayProductView('grid');
@@ -76,14 +114,22 @@ test("Verify users can buy an item successfully", async ({ page }) => {
     await expect(orderItem).toBeVisible();
 })
 
-test("Verify users can buy multiple item successfully", async ({ page }) => {
-    const homePage = new HomePage(page);
-    const loginPage = new LoginPage(page);
-
+test("Verify users can buy multiple item successfully", async ({ homePage, loginPage, accountPage, shopPage }) => {
     // Step 1: Open browser and navigate to page
-    await homePage.navigate();
-
     // Step 2: Login with valid credentials
-    await homePage.goToLoginPage();
-    await loginPage.login(ENV.USERNAME, ENV.PASSWORD);
+    // Step 3: Go to Shop page
+    await accountPage.goToPage(PAGE_NAV.SHOP);
+
+    // Step 4: Select multiple items and add to cart
+    await shopPage.chooseRandomProds(3);
+
+    // Step 5: Go to the cart and verify all selected items
+
+
+    // Step 6: Proceed to checkout and confirm order
+
+
+    // Step 7: Verify order confirmation message
+
+
 })

@@ -36,7 +36,7 @@ export default class ProductPage {
 
         const randomIndex = Math.floor(Math.random() * count);
         console.log(randomIndex);
-        const selected = items.nth(0);
+        const selected = items.nth(randomIndex);
 
         const category = await selected.locator('.products-page-cats').locator('a').innerText();
         const title = await selected.locator('.product-title').locator('a').innerText();
