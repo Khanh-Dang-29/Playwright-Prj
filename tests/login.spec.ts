@@ -10,14 +10,20 @@ import AccountPage from "../page-objects/account.page";
 import CheckoutPage from "../page-objects/checkout.page";
 import OrderStatusPage from "../page-objects/orderStatus.page";
 import ShopPage from "../page-objects/shop.page";
+import PlaceOrder from "../actions/placeOrder";
 
-const billingDetails = {
+dotenv.config();
+
+const billingDetails: billingInfo = {
         firstName: 'Alice',
         lastName: 'Smith',
         country: 'United States (US)',
-        streetAddress: 'Oak Avenue',
+        StrAdd: 'Oak Avenue',
         city: 'Los Angeles',
-        phoneNum: '9876543210'
+        phoneNum:'9876543210',
+        zipCode: '123456789',
+        state: 'California',
+        email: process.env.USER_NAME as string
 };
 
 const test = base.extend<{ homePage: HomePage,
@@ -35,8 +41,7 @@ const test = base.extend<{ homePage: HomePage,
         await use(homePage);
     },
 
-    loginPage: async ({ page }, use) => {
-        dotenv.config(); 
+    loginPage: async ({ page }, use) => { 
         const loginPage = new LoginPage(page);
         await loginPage.login(process.env.USER_NAME as string, process.env.PASSWORD as string);
         await use(loginPage);
@@ -156,7 +161,7 @@ test("Verify users can buy an item using different payment methods (all payment 
     await detailPage.clickCheckout();
 
     // Step 6: Choose a different payment method (Direct bank transfer, Cash on delivery)
-    await checkoutPage.paymentMethod('Check payments');
+    await checkoutPage.paymentMethod('Direct bank transfer');
 
     // Step 7: Complete the payment process
     await checkoutPage.fillBillingDetails(billingDetails);
@@ -186,8 +191,34 @@ test("Verify users can sort items by price", async ({ page, homePage, loginPage,
 })
 
 test("Verify orders appear in order history", async ({ page, homePage, loginPage, accountPage }) => {
+    // Pre-condition: User has placed 02 orders
+    await accountPage.goToPage(PAGE_NAV.SHOP);
+    const prdList = ['AirPods', 'iPad Air 2'];
+    const placeOrder = new PlaceOrder(page);
+    await placeOrder.placeNumberOfOrders(prdList, billingDetails);
     // Step 1: Open browser and navigate to page
     // Step 2: Login with valid credentials
-    // Step 3: Go to Shop page
-    await accountPage.selectPage(PAGE_NAV.ORDERS);
+})
+
+test("Verify users try to buy an item without logging in (As a guest)", async ({ homePage, accountPage, producPage, detailPage, checkoutPage, orderStatusPage }) => {
+    // Step 1: Open https://demo.testarchitect.com/
+    await homePage.navigate();
+
+    // Step 2: Navigate to 'Shop' or 'Products' section
+    await accountPage.goToPage(PAGE_NAV.SHOP);
+
+    // Step 3: Add a product to cart
+    await producPage.chooseProduct('iPad Air 2');
+    await detailPage.addToCart();
+
+    // Step 4: Click on Cart button
+    await detailPage.clickCart();
+
+    // Step 5: Proceed to complete order
+    await detailPage.clickCheckout();
+    await checkoutPage.fillBillingDetails(billingDetails);
+    await checkoutPage. placeOrder();
+
+    const cfMsg =  await orderStatusPage.getSuccessMsg('Thank you. Your order has been received.');
+    await expect(cfMsg).toBeVisible();
 })

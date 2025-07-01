@@ -1,5 +1,4 @@
 import { Locator, Page } from "@playwright/test";
-import { promises } from "dns";
 
 export default class ProductPage {
     // private productView: Locator;
