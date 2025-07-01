@@ -166,3 +166,19 @@ test("Verify users can buy an item using different payment methods (all payment 
     const cfMsg =  await orderStatusPage.getSuccessMsg('Thank you. Your order has been received.');
     await expect(cfMsg).toBeVisible();
 })
+
+test("Verify users can sort items by price", async ({ homePage, loginPage, accountPage, producPage }) => {
+    // Step 1: Open browser and navigate to page
+    // Step 2: Login with valid credentials
+    // Step 3: Go to Shop page
+    await accountPage.goToPage(PAGE_NAV.SHOP);
+
+    // Step 4: Switch view to list
+    // await producPage.changeDisplayView('list');
+
+    // Step 5: Sort items by price (low to high / high to low)
+    await producPage.sortItems('Sort by price: low to high');
+
+    // Step 6: Verify order of items
+    await producPage.getAllPrice();
+})
