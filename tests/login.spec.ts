@@ -11,6 +11,15 @@ import CheckoutPage from "../page-objects/checkout.page";
 import OrderStatusPage from "../page-objects/orderStatus.page";
 import ShopPage from "../page-objects/shop.page";
 
+const billingDetails = {
+        firstName: 'Alice',
+        lastName: 'Smith',
+        country: 'United States (US)',
+        streetAddress: 'Oak Avenue',
+        city: 'Los Angeles',
+        phoneNum: '9876543210'
+};
+
 const test = base.extend<{ homePage: HomePage,
                         loginPage: LoginPage,
                         accountPage: AccountPage,
@@ -29,7 +38,7 @@ const test = base.extend<{ homePage: HomePage,
     loginPage: async ({ page }, use) => {
         dotenv.config(); 
         const loginPage = new LoginPage(page);
-        await loginPage.login(process.env.USERNAME as string, process.env.PASSWORD as string);
+        await loginPage.login(process.env.USER_NAME as string, process.env.PASSWORD as string);
         await use(loginPage);
     },
 
@@ -59,14 +68,6 @@ const test = base.extend<{ homePage: HomePage,
 })
 
 test("Verify users can buy an item successfully", async ({ page, accountPage, producPage, detailPage, checkoutPage, orderStatusPage }) => {
-    const billingDetails = {
-        firstName: 'Alice',
-        lastName: 'Smith',
-        country: 'United States (US)',
-        streetAddress: 'Oak Avenue',
-        city: 'Los Angeles',
-        phoneNum: '9876543210'
-    };
     // Step 1: Open browser and navigate to page
     // Step 2: Login with valid credentials
     // Step 3: Navigate to All departments section
@@ -127,7 +128,7 @@ test("Verify users can buy multiple item successfully", async ({ homePage, login
     await accountPage.goToPage(PAGE_NAV.SHOP);
 
     // Step 4: Select multiple items and add to cart
-    await shopPage.chooseRandomProds(3);
+    await shopPage.addRandomProductsToCart(3);
 
     // Step 5: Go to the cart and verify all selected items
 
@@ -138,4 +139,30 @@ test("Verify users can buy multiple item successfully", async ({ homePage, login
     // Step 7: Verify order confirmation message
 
 
+})
+
+test("Verify users can buy an item using different payment methods (all payment methods)", async ({ homePage, loginPage, accountPage, detailPage, producPage, checkoutPage, orderStatusPage }) => {
+    // Step 1: Open browser and navigate to page
+    // Step 2: Login with valid credentials
+    // Step 3: Go to Shop page
+    await accountPage.goToPage(PAGE_NAV.SHOP);
+
+    // Step 4: Select an item and add to cart
+    await producPage.chooseProduct('AirPods');
+    await detailPage.addToCart();
+
+    // Step 5: Go to Checkout page
+    await detailPage.clickCart();
+    await detailPage.clickCheckout();
+
+    // Step 6: Choose a different payment method (Direct bank transfer, Cash on delivery)
+    await checkoutPage.paymentMethod('Check payments');
+
+    // Step 7: Complete the payment process
+    await checkoutPage.fillBillingDetails(billingDetails);
+    await checkoutPage.placeOrder();
+
+    // Step 8: Verify order confirmation message
+    const cfMsg =  await orderStatusPage.getSuccessMsg('Thank you. Your order has been received.');
+    await expect(cfMsg).toBeVisible();
 })

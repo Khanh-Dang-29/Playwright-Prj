@@ -37,4 +37,8 @@ export default class CheckoutPage {
     async placeOrder() {
         await this.placeOrderBtn.click();
     }
+
+    async paymentMethod(method: string) {
+        await this.page.getByText(`${method}`).click();
+    }
 }

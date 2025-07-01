@@ -1,5 +1,4 @@
 import { Locator, Page } from "@playwright/test";
-import { writeFileSync } from 'fs';
 import DetailPage from "./detail.page";
 
 export default class ShopPage {
@@ -9,45 +8,56 @@ export default class ShopPage {
         this.closePopupBtn = page.getByRole('button', { name: 'Close' });
     }
 
-    async chooseRandomProds(numberOfPrds: number) {
-        await this.closePopupBtn.click();
-        await this.page.waitForSelector('.content-product ');
-        const items = this.page.locator('.content-product ');
-        const count = await items.count();
-        const detailPage = new DetailPage(this.page);
-        console.log(count);
+    async getAllProducts() {
+        await this.page.waitForSelector('.content-product');
+        return this.page.locator('.content-product');
+    }
 
-        if(count === 0) {
+    async getRandomProductInfo(items: Locator): Promise<{ category: string; title: string; price: string }> {
+        const count = await items.count();
+        const randomIndex = Math.floor(Math.random() * count);
+        const selected = items.nth(randomIndex);
+
+        const category = await selected.locator('.products-page-cats a').first().innerText();
+        const title = await selected.locator('.product-title a').first().innerText();
+
+        let price: string;
+        const priceCount = await selected.locator('.price span bdi').count();
+        if (priceCount > 1) {
+            price = await selected.locator('.price ins bdi').first().innerText();
+        } else {
+            price = await selected.locator('.price span bdi').first().innerText();
+        }
+
+        return { category, title, price };
+    }
+
+    async addProductToCartByTitle(title: string) {
+        await this.page.getByRole('link', { name: title, exact: true }).first().click();
+        const detailPage = new DetailPage(this.page);
+        await detailPage.addToCart();
+        await this.page.goBack();
+    }
+
+    async addRandomProductsToCart(numberOfPrds: number): Promise<void> {
+        const items = await this.getAllProducts();
+        const count = await items.count();
+
+        if (count === 0) {
             console.log('Không tìm thấy sản phẩm nào!');
             return;
         }
 
-        var i: number = 0;
+        let i = 0;
 
-        while(i <= numberOfPrds){
-            const randomIndex = Math.floor(Math.random() * count);
-            console.log(randomIndex);
-            const selected = items.nth(randomIndex);
+        while (i < numberOfPrds) {
+            await this.closePopupBtn.click();
 
-            const category = await selected.locator('.products-page-cats').locator('a').innerText();
-            const title = await selected.locator('.product-title').locator('a').innerText();
-            var price: any = await selected.locator('.price span bdi').count();
-            if(price > 1) {
-                price = await selected.locator('.price').locator('ins').locator('bdi').innerText();
-            } else {
-                price = await selected.locator('.price').locator('span').locator('bdi').innerText();
-            }
-            const rating = await selected.locator('.star-rating').getAttribute('aria-label');
+            const product = await this.getRandomProductInfo(items);
+            console.log(`Selected product #${i + 1}:`, product);
 
-            const product = { category, title, price, rating };
-            console.log(product);
-            writeFileSync('selected-product.json', JSON.stringify(product, null, 2));
-            // await selected.locator('.product-content-image').hover();
-            // await this.page.getByRole('link', { name: `Add “${title}” to your cart`, exact: true }).locator('.footer-product').click()
-            // await this.page.locator('.text-center product-details');
-            await this.page.getByRole('link', { name: `${title}`, exact: true }).click();
-            await detailPage.addToCart();
-            await this.page.goBack();
+            await this.addProductToCartByTitle(product.title);
+
             i++;
         }
     }

@@ -1,5 +1,4 @@
 import { Locator, Page } from "@playwright/test";
-import { writeFileSync } from 'fs';
 
 export default class ProductPage {
     // private productView: Locator;
