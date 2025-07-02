@@ -1,4 +1,7 @@
 import { Locator, Page } from "@playwright/test";
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export default class HomePage {
     readonly loginBtn: Locator;
@@ -8,7 +11,7 @@ export default class HomePage {
     }
 
     async navigate() {
-        await this.page.goto("https://demo.testarchitect.com/");
+        await this.page.goto(process.env.URL!);
     }
 
     async goToLoginPage() {

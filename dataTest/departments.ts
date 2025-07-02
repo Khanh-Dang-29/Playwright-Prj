@@ -1,4 +1,4 @@
-export const Departments = {
+export const DEPARTMENTS = {
     AUTOMOBILES_AND_MOTOCYCLES: 'Automobiles & Motocyles',
     CAR_ELECTRONICS: 'Car Electronics',
     MOBILE_PHONE_ACCESSORIES: 'Mobile Phone Accessories',

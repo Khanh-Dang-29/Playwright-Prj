@@ -1,4 +1,4 @@
-type billingInfo = {
+export type BILLING_INFO = {
     firstName: string,
     lastName: string,
     country: string,

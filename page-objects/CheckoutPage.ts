@@ -1,4 +1,5 @@
 import { Locator, Page } from "@playwright/test";
+import { BILLING_INFO } from "../dataTest/BillingInfo";
 
 export default class CheckoutPage {
     readonly firstName: Locator;
@@ -27,7 +28,7 @@ export default class CheckoutPage {
         return this.page.getByRole('cell', { name: `${productName}  × ${quantity}` });
     }
 
-    async fillBillingDetails(info: billingInfo): Promise<void> {
+    async fillBillingDetails(info: BILLING_INFO): Promise<void> {
         await this.firstName.fill(info.firstName);
         await this.lastName.fill(info.lastName);
         await this.country.selectOption(info.country);
@@ -42,7 +43,39 @@ export default class CheckoutPage {
         await this.placeOrderBtn.click();
     }
 
-    async paymentMethod(method: string) {
+    async choosePaymentMethod(method: string) {
         await this.page.getByText(`${method}`).click();
+    }
+
+    async getErrMsg() {
+        return this.page.getByRole('alert');
+    }
+
+    async getFirstNameHighlightedField() {
+        return await this.firstName.evaluate((el) => { return window.getComputedStyle(el).getPropertyValue('--et_inputs-border-color'); });
+    }
+
+    async getLastNameHighlightedField() {
+        return await this.lastName.evaluate((el) => { return window.getComputedStyle(el).getPropertyValue('--et_inputs-border-color'); });
+    }
+
+    async getCountryHighlightedField() {
+        return await this.country.evaluate((el) => { return window.getComputedStyle(el).getPropertyValue('--et_inputs-border-color'); });
+    }
+
+    async getHighlightedField(field: string) {
+        // for(let i = 0; i <= fieldBlank.length; i++) {
+        //     const field = fieldBlank[i];
+        // }
+        return await this.page.getByRole('textbox', { name: `${field} *` }).evaluate((el) => { 
+            return window.getComputedStyle(el).getPropertyValue('--et_inputs-border-color'); 
+        });
+    }
+
+    async verifyFieldHighlighted(fields: string[]) {
+        for(let i = 0; i <= fields.length; i++) {
+            const field = fields[i];
+            const color = this.getHighlightedField(field);
+        }
     }
 }

@@ -1,20 +1,18 @@
 import { test as base, expect } from "@playwright/test";
-import { Departments } from "../dataTest/departments";
-import { PAGE_NAV } from "../dataTest/pageNav";
-import dotenv from 'dotenv';
-import HomePage from "../page-objects/home.page";
-import LoginPage from "../page-objects/login.page";
-import ProductPage from "../page-objects/product.page";
-import DetailPage from "../page-objects/detail.page";
-import AccountPage from "../page-objects/account.page";
-import CheckoutPage from "../page-objects/checkout.page";
-import OrderStatusPage from "../page-objects/orderStatus.page";
-import ShopPage from "../page-objects/shop.page";
-import PlaceOrder from "../actions/placeOrder";
+import { DEPARTMENTS } from "../dataTest/Departments";
+import { PAGE_NAV } from "../dataTest/PageNav";
+import { BILLING_INFO } from "../dataTest/BillingInfo";
+import { COLORS } from "../dataTest/Colors";
+import HomePage from "../page-objects/HomePage";
+import LoginPage from "../page-objects/LoginPage";
+import ProductPage from "../page-objects/ProductPage";
+import DetailPage from "../page-objects/DetailPage";
+import AccountPage from "../page-objects/AccountPage";
+import CheckoutPage from "../page-objects/CheckoutPage";
+import OrderStatusPage from "../page-objects/OrderStatusPage";
+import ShopPage from "../page-objects/ShopPage";
 
-dotenv.config();
-
-const billingDetails: billingInfo = {
+const billingDetails: BILLING_INFO = {
         firstName: 'Alice',
         lastName: 'Smith',
         country: 'United States (US)',
@@ -23,7 +21,7 @@ const billingDetails: billingInfo = {
         phoneNum:'9876543210',
         zipCode: '123456789',
         state: 'California',
-        email: process.env.USER_NAME as string
+        email: process.env.USER_NAME!
 };
 
 const test = base.extend<{ homePage: HomePage,
@@ -43,7 +41,7 @@ const test = base.extend<{ homePage: HomePage,
 
     loginPage: async ({ page }, use) => { 
         const loginPage = new LoginPage(page);
-        await loginPage.login(process.env.USER_NAME as string, process.env.PASSWORD as string);
+        await loginPage.login();
         await use(loginPage);
     },
 
@@ -72,14 +70,14 @@ const test = base.extend<{ homePage: HomePage,
     },
 })
 
-test("Verify users can buy an item successfully", async ({ page, accountPage, producPage, detailPage, checkoutPage, orderStatusPage }) => {
+test("TC01 - Verify users can buy an item successfully", async ({ page, accountPage, producPage, detailPage, checkoutPage, orderStatusPage }) => {
     // Step 1: Open browser and navigate to page
     // Step 2: Login with valid credentials
     // Step 3: Navigate to All departments section
     await accountPage.navigateToAllDepartmentsDropdown();
 
     // Step 4: Select Electronic Components & Supplies
-    await accountPage.selectPage(Departments.ELECTRONIC_COMPONENT_AND_SUPPLIES);
+    await accountPage.selectPage(DEPARTMENTS.ELECTRONIC_COMPONENT_AND_SUPPLIES);
 
     // Step 5: Verify the items should be displayed as a grid
     // const gridDisplayProductView = await producPage.getDisplayProductView('grid');
@@ -126,7 +124,7 @@ test("Verify users can buy an item successfully", async ({ page, accountPage, pr
     await expect(orderItem).toBeVisible();
 })
 
-test("Verify users can buy multiple item successfully", async ({ homePage, loginPage, accountPage, shopPage }) => {
+test("TC02 - Verify users can buy multiple item successfully", async ({ homePage, loginPage, accountPage, shopPage }) => {
     // Step 1: Open browser and navigate to page
     // Step 2: Login with valid credentials
     // Step 3: Go to Shop page
@@ -146,7 +144,7 @@ test("Verify users can buy multiple item successfully", async ({ homePage, login
 
 })
 
-test("Verify users can buy an item using different payment methods (all payment methods)", async ({ homePage, loginPage, accountPage, detailPage, producPage, checkoutPage, orderStatusPage }) => {
+test("TC03 - Verify users can buy an item using different payment methods (all payment methods)", async ({ homePage, loginPage, accountPage, detailPage, producPage, checkoutPage, orderStatusPage }) => {
     // Step 1: Open browser and navigate to page
     // Step 2: Login with valid credentials
     // Step 3: Go to Shop page
@@ -161,7 +159,7 @@ test("Verify users can buy an item using different payment methods (all payment 
     await detailPage.clickCheckout();
 
     // Step 6: Choose a different payment method (Direct bank transfer, Cash on delivery)
-    await checkoutPage.paymentMethod('Direct bank transfer');
+    await checkoutPage.choosePaymentMethod('Direct bank transfer');
 
     // Step 7: Complete the payment process
     await checkoutPage.fillBillingDetails(billingDetails);
@@ -172,7 +170,7 @@ test("Verify users can buy an item using different payment methods (all payment 
     await expect(cfMsg).toBeVisible();
 })
 
-test("Verify users can sort items by price", async ({ page, homePage, loginPage, accountPage, producPage }) => {
+test("TC04 - Verify users can sort items by price", async ({ page, homePage, loginPage, accountPage, producPage }) => {
     // Step 1: Open browser and navigate to page
     // Step 2: Login with valid credentials
     // Step 3: Go to Shop page
@@ -190,17 +188,15 @@ test("Verify users can sort items by price", async ({ page, homePage, loginPage,
     expect(actualPriceSort).toEqual(expectedPriceSort);
 })
 
-test("Verify orders appear in order history", async ({ page, homePage, loginPage, accountPage }) => {
+test("TC05 - Verify orders appear in order history", async ({ page, homePage, loginPage, accountPage }) => {
     // Pre-condition: User has placed 02 orders
     await accountPage.goToPage(PAGE_NAV.SHOP);
     const prdList = ['AirPods', 'iPad Air 2'];
-    const placeOrder = new PlaceOrder(page);
-    await placeOrder.placeNumberOfOrders(prdList, billingDetails);
     // Step 1: Open browser and navigate to page
     // Step 2: Login with valid credentials
 })
 
-test("Verify users try to buy an item without logging in (As a guest)", async ({ homePage, accountPage, producPage, detailPage, checkoutPage, orderStatusPage }) => {
+test("TC06 - Verify users try to buy an item without logging in (As a guest)", async ({ homePage, accountPage, producPage, detailPage, checkoutPage, orderStatusPage }) => {
     // Step 1: Open https://demo.testarchitect.com/
     await homePage.navigate();
 
@@ -221,4 +217,29 @@ test("Verify users try to buy an item without logging in (As a guest)", async ({
 
     const cfMsg =  await orderStatusPage.getSuccessMsg('Thank you. Your order has been received.');
     await expect(cfMsg).toBeVisible();
+})
+
+test("TC07 - Ensure proper error handling when mandatory fields are blank", async ({ page, homePage, accountPage, producPage, detailPage, checkoutPage }) => {
+    // Pre-condition:User is at checkout
+    await homePage.navigate();
+    await accountPage.goToPage(PAGE_NAV.SHOP);
+    await producPage.chooseProduct('iPad Air 2');
+    await detailPage.addToCart();
+    await detailPage.clickCart();
+    await detailPage.clickCheckout();
+
+    // Step 1: Leave mandatory fields (address, payment info) blank
+    // Step 2: Click 'Confirm Order'
+    await checkoutPage.placeOrder();
+
+    // Step 3: Verify error messages (System should highlight missing fields and show an error message)
+    const errorMsg = await checkoutPage.getErrMsg();
+    await expect(errorMsg).toBeVisible();
+
+    // console.log(await checkoutPage.getHighlightedField('Phone'));
+    const fields = ['First name', 'Last name', 'Country / Region', 'Street address', 'Town / City', 'ZIP Code', 'Phone', 'Email address'];
+    
+    for(let i = 0; i <= fields.length; i++) {
+        await expect(page.getByRole('textbox', { name: `${fields[i]} *` })).toHaveCSS('--et_inputs-border-color', COLORS.RED);
+    }
 })

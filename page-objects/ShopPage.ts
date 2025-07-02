@@ -1,5 +1,5 @@
 import { Locator, Page } from "@playwright/test";
-import DetailPage from "./detail.page";
+import DetailPage from "./DetailPage";
 
 export default class ShopPage {
     readonly closePopupBtn: Locator;

@@ -14,9 +14,9 @@ export default class LoginPage {
         this.allDepartmentsDropdown = page.getByText('All departments');
     }
 
-    async login(username: string, password: string) {
-        await this.username.fill(username);
-        await this.password.fill(password);
+    async login() {
+        await this.username.fill(process.env.USER_NAME!);
+        await this.password.fill(process.env.PASSWORD!);
         await this.submitBtn.click();
     }
 
