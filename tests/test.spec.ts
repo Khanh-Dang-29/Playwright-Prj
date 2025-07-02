@@ -236,10 +236,18 @@ test("TC07 - Ensure proper error handling when mandatory fields are blank", asyn
     const errorMsg = await checkoutPage.getErrMsg();
     await expect(errorMsg).toBeVisible();
 
-    // console.log(await checkoutPage.getHighlightedField('Phone'));
     const fields = ['First name', 'Last name', 'Country / Region', 'Street address', 'Town / City', 'ZIP Code', 'Phone', 'Email address'];
-    
-    for(let i = 0; i <= fields.length; i++) {
-        await expect(page.getByRole('textbox', { name: `${fields[i]} *` })).toHaveCSS('--et_inputs-border-color', COLORS.RED);
-    }
+    await checkoutPage.verifyFieldHighlighted(fields);
+})
+
+test("TC08 - Verify users can clear the cart", async ({ page, homePage, loginPage, accountPage }) => {
+    // Step 1: Open browser and go to https://demo.testarchitect.com/
+    // Step 2: Login with valid credentials 
+    // Step 3: Go to Shopping cart page
+    await accountPage.goToPage(PAGE_NAV.SHOP);
+
+    // Step 4: Verify items show in table
+    // Step 5: Click on Clear shopping cart
+    // Step 6: Verify empty cart page displays
+
 })

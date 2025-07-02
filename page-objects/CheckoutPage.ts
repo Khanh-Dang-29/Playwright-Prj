@@ -1,5 +1,6 @@
-import { Locator, Page } from "@playwright/test";
+import { Locator, Page, expect } from "@playwright/test";
 import { BILLING_INFO } from "../dataTest/BillingInfo";
+import { COLORS } from "../dataTest/Colors";
 
 export default class CheckoutPage {
     readonly firstName: Locator;
@@ -74,8 +75,7 @@ export default class CheckoutPage {
 
     async verifyFieldHighlighted(fields: string[]) {
         for(let i = 0; i <= fields.length; i++) {
-            const field = fields[i];
-            const color = this.getHighlightedField(field);
+            await expect(this.page.getByRole('textbox', { name: `${fields[i]} *` })).toHaveCSS('--et_inputs-border-color', COLORS.RED);
         }
     }
 }
