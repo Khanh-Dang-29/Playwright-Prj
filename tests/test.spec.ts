@@ -2,7 +2,6 @@ import { test as base, expect } from "@playwright/test";
 import { DEPARTMENTS } from "../dataTest/Departments";
 import { PAGE_NAV } from "../dataTest/PageNav";
 import { BILLING_INFO } from "../dataTest/BillingInfo";
-import { COLORS } from "../dataTest/Colors";
 import HomePage from "../page-objects/HomePage";
 import LoginPage from "../page-objects/LoginPage";
 import ProductPage from "../page-objects/ProductPage";
@@ -11,6 +10,7 @@ import AccountPage from "../page-objects/AccountPage";
 import CheckoutPage from "../page-objects/CheckoutPage";
 import OrderStatusPage from "../page-objects/OrderStatusPage";
 import ShopPage from "../page-objects/ShopPage";
+import CartPage from "../page-objects/CartPage";
 
 const billingDetails: BILLING_INFO = {
         firstName: 'Alice',
@@ -31,7 +31,8 @@ const test = base.extend<{ homePage: HomePage,
                         detailPage: DetailPage,
                         checkoutPage: CheckoutPage,
                         orderStatusPage: OrderStatusPage,
-                        shopPage: ShopPage }>({
+                        shopPage: ShopPage,
+                        cartPage: CartPage }>({
     homePage: async ({ page }, use) => {
         const homePage = new HomePage(page);
         await homePage.navigate();
@@ -68,6 +69,10 @@ const test = base.extend<{ homePage: HomePage,
     shopPage: async ({ page }, use) => {
         await use(new ShopPage(page));
     },
+
+    cartPage: async({ page }, use) => {
+        await use(new CartPage(page));
+    }
 })
 
 test("TC01 - Verify users can buy an item successfully", async ({ page, accountPage, producPage, detailPage, checkoutPage, orderStatusPage }) => {
@@ -240,14 +245,29 @@ test("TC07 - Ensure proper error handling when mandatory fields are blank", asyn
     await checkoutPage.verifyFieldHighlighted(fields);
 })
 
-test("TC08 - Verify users can clear the cart", async ({ page, homePage, loginPage, accountPage }) => {
+test("TC08 - Verify users can clear the cart", async ({ page, homePage, loginPage, accountPage, producPage, detailPage, cartPage }) => {
+    // Pre-conditions: User added the items into cart
+    await accountPage.goToPage(PAGE_NAV.SHOP);
+    await producPage.chooseProduct('AirPods');
+    await detailPage.addToCart();
+    // await page.waitForTimeout(5000);
+    await page.goBack();
+    await producPage.chooseProduct('iPad Air 2');
+    await detailPage.addToCart();
+    // await page.waitForTimeout(5000);
+
     // Step 1: Open browser and go to https://demo.testarchitect.com/
     // Step 2: Login with valid credentials 
     // Step 3: Go to Shopping cart page
-    await accountPage.goToPage(PAGE_NAV.SHOP);
+    await detailPage.goToCart(); 
 
     // Step 4: Verify items show in table
+    await cartPage.verifyOrdersInTable();
+    
     // Step 5: Click on Clear shopping cart
-    // Step 6: Verify empty cart page displays
+    await cartPage.clearCart();
 
+    // Step 6: Verify empty cart page displays
+    const title = await cartPage.getEmptyCartMsg('YOUR SHOPPING CART IS EMPTY');
+    await expect(title).toBeVisible();
 })

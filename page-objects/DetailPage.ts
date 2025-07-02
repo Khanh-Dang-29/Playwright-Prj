@@ -2,7 +2,7 @@ import { Locator, Page } from "@playwright/test";
 
 export default class DetailPage {
     readonly addToCartBtn: Locator;
-    readonly cartBtn: Locator
+    readonly cartBtn: Locator;
     readonly checkoutBTn: Locator;
 
     constructor(private page: Page) {
@@ -21,5 +21,9 @@ export default class DetailPage {
 
     async clickCheckout() {
         await this.checkoutBTn.click();
+    }
+
+    async goToCart() {
+        await this.cartBtn.click();
     }
 }
