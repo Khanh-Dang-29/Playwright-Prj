@@ -65,9 +65,6 @@ export default class CheckoutPage {
     }
 
     async getHighlightedField(field: string) {
-        // for(let i = 0; i <= fieldBlank.length; i++) {
-        //     const field = fieldBlank[i];
-        // }
         return await this.page.getByRole('textbox', { name: `${field} *` }).evaluate((el) => { 
             return window.getComputedStyle(el).getPropertyValue('--et_inputs-border-color'); 
         });
