@@ -25,5 +25,11 @@ export default class DetailPage {
 
     async goToCart() {
         await this.cartBtn.click();
+        await this.page.reload();
+    }
+
+    async getQuantity() {
+        const prdName = await this.page.locator('.product_title').innerText();
+        return this.page.getByRole('spinbutton', { name: `${prdName} quantity` }).getAttribute('value');
     }
 }

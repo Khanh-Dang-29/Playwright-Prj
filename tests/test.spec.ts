@@ -250,11 +250,9 @@ test("TC08 - Verify users can clear the cart", async ({ page, homePage, loginPag
     await accountPage.goToPage(PAGE_NAV.SHOP);
     await producPage.chooseProduct('AirPods');
     await detailPage.addToCart();
-    // await page.waitForTimeout(5000);
     await page.goBack();
     await producPage.chooseProduct('iPad Air 2');
     await detailPage.addToCart();
-    // await page.waitForTimeout(5000);
 
     // Step 1: Open browser and go to https://demo.testarchitect.com/
     // Step 2: Login with valid credentials 
@@ -270,4 +268,36 @@ test("TC08 - Verify users can clear the cart", async ({ page, homePage, loginPag
     // Step 6: Verify empty cart page displays
     const title = await cartPage.getEmptyCartMsg('YOUR SHOPPING CART IS EMPTY');
     await expect(title).toBeVisible();
+})
+
+test("TC09 - Verify users can update quantity of product in cart", async ({ page, homePage, loginPage, accountPage, producPage, detailPage, cartPage}) => {
+    // Step 1: Open browser and go to https://demo.testarchitect.com/
+    // Step 2: Login with valid credentials
+    // Step 3: Go to Shop page
+    await accountPage.goToPage(PAGE_NAV.SHOP);
+
+    // Step 4: Add a product
+    await producPage.chooseProduct('Robotic Arm Edge');
+    await detailPage.addToCart();
+    const actualQuantity = await detailPage.getQuantity();
+    // console.log(quantity);
+
+    // Step 5: Go to the cart
+    await detailPage.goToCart();
+
+    // Step 6: Verify quantity of added product
+    const expectedQuantity = await cartPage.getOrderedItemQuantity();
+    await expect(expectedQuantity).toEqual(actualQuantity);
+    
+    // Step 7: Click on Plus(+) button
+    await cartPage.addQuantity();
+
+    // Step 8: Verify quantity of product and SUB TOTAL price
+
+    
+    // Step 9: Enter 4 into quantity textbox then click on UPDATE CART button
+    // Step 10: Verify quantity of product is 4 and SUB TOTAL price
+    // Step 11: Click on Minus(-) button
+    // Step 12: Verify quantity of product and SUB TOTAL price
+
 })
