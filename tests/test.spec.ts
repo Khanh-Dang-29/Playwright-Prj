@@ -1,16 +1,7 @@
-import { test as base, expect } from "@playwright/test";
+import { test, expect } from "./fixtures";
 import { DEPARTMENTS } from "../dataTest/Departments";
 import { PAGE_NAV } from "../dataTest/PageNav";
 import { BILLING_INFO } from "../dataTest/BillingInfo";
-import HomePage from "../page-objects/HomePage";
-import LoginPage from "../page-objects/LoginPage";
-import ProductPage from "../page-objects/ProductPage";
-import DetailPage from "../page-objects/DetailPage";
-import AccountPage from "../page-objects/AccountPage";
-import CheckoutPage from "../page-objects/CheckoutPage";
-import OrderStatusPage from "../page-objects/OrderStatusPage";
-import ShopPage from "../page-objects/ShopPage";
-import CartPage from "../page-objects/CartPage";
 
 const billingDetails: BILLING_INFO = {
         firstName: 'Alice',
@@ -23,57 +14,6 @@ const billingDetails: BILLING_INFO = {
         state: 'California',
         email: process.env.USER_NAME!
 };
-
-const test = base.extend<{ homePage: HomePage,
-                        loginPage: LoginPage,
-                        accountPage: AccountPage,
-                        producPage: ProductPage, 
-                        detailPage: DetailPage,
-                        checkoutPage: CheckoutPage,
-                        orderStatusPage: OrderStatusPage,
-                        shopPage: ShopPage,
-                        cartPage: CartPage }>({
-    homePage: async ({ page }, use) => {
-        const homePage = new HomePage(page);
-        await homePage.navigate();
-        await homePage.goToLoginPage();
-        await use(homePage);
-    },
-
-    loginPage: async ({ page }, use) => { 
-        const loginPage = new LoginPage(page);
-        await loginPage.login();
-        await use(loginPage);
-    },
-
-    accountPage: async ({ page }, use) => {
-        await use(new AccountPage(page));
-    },
-
-    producPage: async ({ page }, use) => {
-        await use(new ProductPage(page));
-    },
-
-    detailPage: async ({ page }, use) => {
-        await use(new DetailPage(page));
-    },
-
-    checkoutPage: async ({ page }, use) => {
-        await use(new CheckoutPage(page));
-    },
-
-    orderStatusPage: async ({ page }, use) => {
-        await use(new OrderStatusPage(page));
-    },
-
-    shopPage: async ({ page }, use) => {
-        await use(new ShopPage(page));
-    },
-
-    cartPage: async({ page }, use) => {
-        await use(new CartPage(page));
-    }
-})
 
 test("TC01 - Verify users can buy an item successfully", async ({ page, accountPage, producPage, detailPage, checkoutPage, orderStatusPage }) => {
     // Step 1: Open browser and navigate to page
@@ -277,24 +217,32 @@ test("TC09 - Verify users can update quantity of product in cart", async ({ page
     await accountPage.goToPage(PAGE_NAV.SHOP);
 
     // Step 4: Add a product
-    await producPage.chooseProduct('Robotic Arm Edge');
+    await producPage.chooseProduct('DJI Phantom 4 Camera Drone');
     await detailPage.addToCart();
     const actualQuantity = await detailPage.getQuantity();
-    // console.log(quantity);
+    const prdPrice = await detailPage.getPrice();
+    const prdName = await detailPage.getPrdName()
+    // console.log(await detailPage.getPrice());
 
     // Step 5: Go to the cart
     await detailPage.goToCart();
 
     // Step 6: Verify quantity of added product
-    const expectedQuantity = await cartPage.getOrderedItemQuantity();
+    let expectedQuantity = await cartPage.getOrderedItemQuantity(prdName);
     await expect(expectedQuantity).toEqual(actualQuantity);
+    // console.log(await cartPage.getOrderItemPrice(prdName));
     
     // Step 7: Click on Plus(+) button
     await cartPage.addQuantity();
 
     // Step 8: Verify quantity of product and SUB TOTAL price
+    expectedQuantity = await cartPage.getOrderedItemQuantity(prdName);
+    let expectedPrice = prdPrice * (expectedQuantity + 1);
+    const actualPrice = await cartPage.getOrderItemPrice(prdName);
+    await expect(expectedQuantity).toEqual(actualQuantity + 1);
+    await expect(expectedPrice).toEqual(actualPrice);
 
-    
+
     // Step 9: Enter 4 into quantity textbox then click on UPDATE CART button
     // Step 10: Verify quantity of product is 4 and SUB TOTAL price
     // Step 11: Click on Minus(-) button

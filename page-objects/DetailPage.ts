@@ -29,7 +29,17 @@ export default class DetailPage {
     }
 
     async getQuantity() {
-        const prdName = await this.page.locator('.product_title').innerText();
-        return this.page.getByRole('spinbutton', { name: `${prdName} quantity` }).getAttribute('value');
+        const prdName = await this.getPrdName();
+        return parseFloat(await this.page.getByRole('spinbutton', { name: `${prdName} quantity` }).getAttribute('value') ?? '0');
+    }
+
+    async getPrice() {
+        const price = await this.page.locator('.fixed-content .price .woocommerce-Price-amount').last().innerText();
+        const numberOnly = price.replace(/[^0-9.]/g, '');
+        return parseFloat(numberOnly);
+    }
+
+    async getPrdName() {
+        return this.page.locator('.product_title').innerText();
     }
 }

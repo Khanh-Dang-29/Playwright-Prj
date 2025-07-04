@@ -26,7 +26,6 @@ export default class ProductPage {
 
     async sortItems(sort: string) {
         await this.sortDropdown.selectOption(`${sort}`);
-        
     }
 
     async getAllPrice() {
