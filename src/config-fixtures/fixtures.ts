@@ -1,13 +1,13 @@
 import { test as base, expect } from '@playwright/test';
-import HomePage from "../page-objects/HomePage";
-import LoginPage from "../page-objects/LoginPage";
-import ProductPage from "../page-objects/ProductPage";
-import DetailPage from "../page-objects/DetailPage";
-import AccountPage from "../page-objects/AccountPage";
-import CheckoutPage from "../page-objects/CheckoutPage";
-import OrderStatusPage from "../page-objects/OrderStatusPage";
-import ShopPage from "../page-objects/ShopPage";
-import CartPage from "../page-objects/CartPage";
+import HomePage from "@pages/HomePage";
+import LoginPage from "@pages/LoginPage";
+import ProductPage from "@pages/ProductPage";
+import DetailPage from "@pages/DetailPage";
+import AccountPage from "@pages/AccountPage";
+import CheckoutPage from "@pages/CheckoutPage";
+import OrderStatusPage from "@pages/OrderStatusPage";
+import ShopPage from "@pages/ShopPage";
+import CartPage from "@pages/CartPage";
 
 export const test = base.extend<{ homePage: HomePage,
                         loginPage: LoginPage,

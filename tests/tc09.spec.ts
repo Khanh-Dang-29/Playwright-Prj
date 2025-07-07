@@ -1,5 +1,5 @@
-import { test, expect } from "../config-fixtures/fixtures";
-import { PAGE_NAV } from "../dataTest/PageNav";
+import { test, expect } from "@utils/fixtures";
+import { PAGE_NAV } from "@data-test/PageNav";
 
 test("TC09 - Verify users can update quantity of product in cart", async ({
     homePage,

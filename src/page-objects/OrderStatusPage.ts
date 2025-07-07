@@ -1,5 +1,5 @@
 import { Page } from "@playwright/test";
-import { MESSAGES } from "../dataTest/Messages";
+import { MESSAGES } from "@data-test/Messages";
 
 export default class OrderStatusPage {
     constructor(private page: Page) {}

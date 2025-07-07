@@ -5,7 +5,6 @@ export default class LoginPage {
     readonly password: Locator;
     readonly submitBtn: Locator;
     readonly allDepartmentsDropdown: Locator;
-    private optionName: Locator;
 
     constructor(private page: Page) {
         this.username = page.getByRole('textbox', { name: 'Username or email address *' });
@@ -18,12 +17,5 @@ export default class LoginPage {
         await this.username.fill(process.env.USER_NAME!);
         await this.password.fill(process.env.PASSWORD!);
         await this.submitBtn.click();
-    }
-
-    async goToPage(optionName: string) {
-        await this.allDepartmentsDropdown.hover();
-        // this.optionName = this.page.locator("//div[@class='secondary-menu-wrapper']//a[text()='"+ optionName +"']");
-        this.optionName = this.page.locator('.secondary-menu-wrapper a').filter({ hasText: `${optionName}`});
-        await this.optionName.click();
     }
 }

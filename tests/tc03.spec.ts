@@ -1,6 +1,6 @@
-import { test, expect } from "../config-fixtures/fixtures";
-import { PAGE_NAV } from "../dataTest/PageNav";
-import { BILLING_INFO } from "../dataTest/BillingInfo";
+import { test, expect } from "@utils/fixtures";
+import { PAGE_NAV } from "@data-test/PageNav";
+import { BILLING_INFO } from "@data-test/BillingInfo";
 
 const billingDetails: BILLING_INFO = {
         firstName: 'Alice',

@@ -1,6 +1,6 @@
 import { Locator, Page, expect } from "@playwright/test";
-import { BILLING_INFO } from "../dataTest/BillingInfo";
-import { COLORS } from "../dataTest/Colors";
+import { BILLING_INFO } from "@data-test/BillingInfo";
+import { COLORS } from "@data-test/Colors";
 
 export default class CheckoutPage {
     readonly firstName: Locator;

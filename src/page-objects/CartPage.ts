@@ -1,5 +1,5 @@
 import { Locator, Page, expect } from "@playwright/test";
-import { MESSAGES } from "../dataTest/Messages";
+import { MESSAGES } from "@data-test/Messages";
 
 export default class CartPage {
     readonly clearCartBtn: Locator;

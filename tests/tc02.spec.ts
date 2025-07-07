@@ -1,7 +1,7 @@
-import { test, expect } from "../config-fixtures/fixtures";
-import { DEPARTMENTS } from "../dataTest/Departments";
-import { PAGE_NAV } from "../dataTest/PageNav";
-import { BILLING_INFO } from "../dataTest/BillingInfo";
+import { test, expect } from "@utils/fixtures";
+import { DEPARTMENTS } from "@data-test/Departments";
+import { PAGE_NAV } from "@data-test/PageNav";
+import { BILLING_INFO } from "@data-test/BillingInfo";
 
 test("TC02 - Verify users can buy multiple item successfully", async ({ homePage, loginPage, accountPage, shopPage }) => {
     // Step 1: Open browser and navigate to page
