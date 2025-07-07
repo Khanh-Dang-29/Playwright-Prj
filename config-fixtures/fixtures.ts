@@ -1,7 +1,4 @@
 import { test as base, expect } from '@playwright/test';
-import { DEPARTMENTS } from "../dataTest/Departments";
-import { PAGE_NAV } from "../dataTest/PageNav";
-import { BILLING_INFO } from "../dataTest/BillingInfo";
 import HomePage from "../page-objects/HomePage";
 import LoginPage from "../page-objects/LoginPage";
 import ProductPage from "../page-objects/ProductPage";
@@ -15,7 +12,7 @@ import CartPage from "../page-objects/CartPage";
 export const test = base.extend<{ homePage: HomePage,
                         loginPage: LoginPage,
                         accountPage: AccountPage,
-                        producPage: ProductPage, 
+                        productPage: ProductPage, 
                         detailPage: DetailPage,
                         checkoutPage: CheckoutPage,
                         orderStatusPage: OrderStatusPage,
@@ -38,7 +35,7 @@ export const test = base.extend<{ homePage: HomePage,
         await use(new AccountPage(page));
     },
 
-    producPage: async ({ page }, use) => {
+    productPage: async ({ page }, use) => {
         await use(new ProductPage(page));
     },
 

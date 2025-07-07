@@ -1,8 +1,8 @@
-import { Locator, Page } from "@playwright/test";
+import { Page } from "@playwright/test";
+import { MESSAGES } from "../dataTest/Messages";
 
 export default class OrderStatusPage {
-    constructor(private page: Page) {
-    }
+    constructor(private page: Page) {}
 
     async getItemName(productName: string) {
         return this.page.getByText(`${productName}`);
@@ -16,7 +16,7 @@ export default class OrderStatusPage {
         return this.page.locator(`//h2[text()='Order details']//following-sibling::table//a[text()='${prodName}']`);
     }
 
-    async getSuccessMsg(msg: string) {
-        return this.page.getByText(`${msg}`);
+    async getSuccessMsg() {
+        return this.page.getByText(MESSAGES.ORDERS_SUCCESS_MESSAGE);
     }
 }

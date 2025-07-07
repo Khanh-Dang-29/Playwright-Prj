@@ -22,7 +22,8 @@ export default class LoginPage {
 
     async goToPage(optionName: string) {
         await this.allDepartmentsDropdown.hover();
-        this.optionName = this.page.locator("//div[@class='secondary-menu-wrapper']//a[text()='"+ optionName +"']");
+        // this.optionName = this.page.locator("//div[@class='secondary-menu-wrapper']//a[text()='"+ optionName +"']");
+        this.optionName = this.page.locator('.secondary-menu-wrapper a').filter({ hasText: `${optionName}`});
         await this.optionName.click();
     }
 }

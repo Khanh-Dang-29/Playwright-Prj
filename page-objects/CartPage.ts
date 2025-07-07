@@ -1,16 +1,19 @@
 import { Locator, Page, expect } from "@playwright/test";
+import { MESSAGES } from "../dataTest/Messages";
 
 export default class CartPage {
     readonly clearCartBtn: Locator;
     readonly plusBtn: Locator;
     readonly minusBtn: Locator;
     readonly title: Locator;
+    readonly updateCartBtn: Locator;
 
     constructor(private page: Page) {
         this.clearCartBtn = page.locator('.clear-cart');
         this.plusBtn = page.locator('.plus');
         this.minusBtn = page.locator('.minus');
         this.title = page.locator('.product-title');
+        this.updateCartBtn = page.getByRole('button', { name: 'UPDATE CART' });
     }
 
     async verifyOrdersInTable() {
@@ -22,8 +25,8 @@ export default class CartPage {
         await this.clearCartBtn.click();
     }
 
-    async getEmptyCartMsg(msg: string) {
-        return this.page.getByRole('heading', { name: `${msg}`});
+    async getEmptyCartMsg() {
+        return this.page.getByRole('heading', { name: MESSAGES.EMPTY_CART_MESSAGE });
     }
 
     async getOrderedItemQuantity(prdName: string) {
@@ -32,19 +35,32 @@ export default class CartPage {
 
     async addQuantity() {
         await this.plusBtn.click();
-        await this.page.waitForSelector('.blockUI');
-        await this.page.waitForSelector('.blockUI', { state: 'detached' });
+        await this.page.waitForSelector('form .blockOverlay');
+        await this.page.waitForSelector('form .blockOverlay', { state: 'detached' });
     }
 
     async reduceQuantity() {
         await this.minusBtn.click();
-        await this.page.waitForSelector('.blockUI');
-        await this.page.waitForSelector('.blockUI', { state: 'detached' });
+        await this.page.waitForSelector('form .blockOverlay');
+        await this.page.waitForSelector('form .blockOverlay', { state: 'detached' });
     }
 
     async getOrderItemPrice(prdName: string) {
-        const price = await this.page.locator('tr').filter({ has: this.page.getByRole('link', { name: `${prdName}` }) }).locator('.product-subtotal span bdi').innerText();
+        const price = await this.page.locator('tr')
+        .filter({ 
+            has: this.page.getByRole('link', { name: `${prdName}` }) 
+        })
+        .locator('.product-subtotal span bdi')
+        .innerText();
         const numberOnly = price.replace(/[^0-9.]/g, '');
         return parseFloat(numberOnly);
+    }
+
+    async fillQuantity(prdName: string, quantity: string) {
+        await this.page.getByRole('spinbutton', { name: `${prdName} quantity` }).fill(quantity);
+    }
+
+    async updateCart() {
+        await this.updateCartBtn.click();
     }
 }
