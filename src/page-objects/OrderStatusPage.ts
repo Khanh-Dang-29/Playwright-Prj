@@ -19,4 +19,8 @@ export default class OrderStatusPage {
     async getSuccessMsg() {
         return this.page.getByText(MESSAGES.ORDERS_SUCCESS_MESSAGE);
     }
+
+    async getOrderNumber() {
+        return await this.page.locator('.order strong').innerText();
+    }
 }

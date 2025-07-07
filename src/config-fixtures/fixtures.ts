@@ -8,6 +8,7 @@ import CheckoutPage from "@pages/CheckoutPage";
 import OrderStatusPage from "@pages/OrderStatusPage";
 import ShopPage from "@pages/ShopPage";
 import CartPage from "@pages/CartPage";
+import OrderHistory from '@pages/OrderHistoryPage';
 
 export const test = base.extend<{ homePage: HomePage,
                         loginPage: LoginPage,
@@ -16,6 +17,7 @@ export const test = base.extend<{ homePage: HomePage,
                         detailPage: DetailPage,
                         checkoutPage: CheckoutPage,
                         orderStatusPage: OrderStatusPage,
+                        orderHistory: OrderHistory,
                         shopPage: ShopPage,
                         cartPage: CartPage }>({
     homePage: async ({ page }, use) => {
@@ -49,6 +51,10 @@ export const test = base.extend<{ homePage: HomePage,
 
     orderStatusPage: async ({ page }, use) => {
         await use(new OrderStatusPage(page));
+    },
+
+    orderHistory: async ({ page }, use) => {
+        await use(new OrderHistory(page));
     },
 
     shopPage: async ({ page }, use) => {

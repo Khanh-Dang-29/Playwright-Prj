@@ -28,7 +28,7 @@ test("TC01 - Verify users can buy an item successfully", async ({
     await accountPage.navigateToAllDepartmentsDropdown();
 
     // Step 4: Select Electronic Components & Supplies
-    await accountPage.selectPage(DEPARTMENTS.ELECTRONIC_COMPONENT_AND_SUPPLIES);
+    await accountPage.selectDepartments(DEPARTMENTS.ELECTRONIC_COMPONENT_AND_SUPPLIES);
 
     // Step 5: Verify the items should be displayed as a grid
     // const gridDisplayProductView = await productPage.getDisplayProductView('grid');

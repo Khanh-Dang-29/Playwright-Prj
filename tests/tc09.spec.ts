@@ -19,7 +19,7 @@ test("TC09 - Verify users can update quantity of product in cart", async ({
     await detailPage.addToCart();
     const expectedQuantity = await detailPage.getQuantity();
     const expectedPrice = await detailPage.priceInNumber();
-    const prdName = await detailPage.getPrdName()
+    const prdName = await detailPage.getPrdName();
 
     // Step 5: Go to the cart
     await detailPage.goToCart();
