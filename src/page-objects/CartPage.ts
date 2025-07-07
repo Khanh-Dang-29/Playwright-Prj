@@ -30,7 +30,7 @@ export default class CartPage {
     }
 
     async getOrderedItemQuantity(prdName: string) {
-        return parseFloat(await this.page.getByRole('spinbutton', { name: `${prdName} quantity` }).getAttribute('value') ?? '0');
+        return await this.page.getByRole('spinbutton', { name: `${prdName} quantity` }).getAttribute('value');
     }
 
     async addQuantity() {
@@ -46,14 +46,12 @@ export default class CartPage {
     }
 
     async getOrderItemPrice(prdName: string) {
-        const price = await this.page.locator('tr')
+        return await this.page.locator('tr')
         .filter({ 
             has: this.page.getByRole('link', { name: `${prdName}` }) 
         })
         .locator('.product-subtotal span bdi')
         .innerText();
-        const numberOnly = price.replace(/[^0-9.]/g, '');
-        return parseFloat(numberOnly);
     }
 
     async fillQuantity(prdName: string, quantity: string) {
