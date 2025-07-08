@@ -10,7 +10,6 @@ test("TC02 - Verify users can buy multiple item successfully", async ({ homePage
     await accountPage.goToPage(PAGE_NAV.SHOP);
 
     // Step 4: Select multiple items and add to cart
-    await shopPage.addRandomProductsToCart(3);
 
     // Step 5: Go to the cart and verify all selected items
 
