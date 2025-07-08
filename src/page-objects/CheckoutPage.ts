@@ -25,7 +25,7 @@ export default class CheckoutPage {
         this.placeOrderBtn = page.getByRole('button', { name: 'Place order' });
     }
 
-    async getItemOrdered(productName: string, quantity: number) {
+    async getItemOrdered(productName: string, quantity: string) {
         return this.page.getByRole('cell', { name: `${productName}  × ${quantity}` });
     }
 

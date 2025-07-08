@@ -37,7 +37,7 @@ export default class DetailPage {
 
     async getQuantity() {
         const prdName = await this.getPrdName();
-        return await this.page.getByRole('spinbutton', { name: `${prdName} quantity` }).getAttribute('value');
+        return await this.page.getByRole('spinbutton', { name: `${prdName} quantity` }).getAttribute('value') ?? "";
     }
 
     async getPrice() {

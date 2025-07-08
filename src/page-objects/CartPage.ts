@@ -18,7 +18,7 @@ export default class CartPage {
 
     async verifyOrdersInTable() {
         const cartItems =  await this.page.locator('.table-responsive table tbody tr.cart_item').count();
-        await expect(cartItems).toBeGreaterThan(0);
+        expect(cartItems).toBeGreaterThan(0);
     }
 
     async clearCart() {

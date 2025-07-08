@@ -16,6 +16,8 @@ const billingDetails: BILLING_INFO = {
 
 test("TC01 - Verify users can buy an item successfully", async ({ 
     page,
+    homePage,
+    loginPage,
     accountPage,
     productPage,
     detailPage,
@@ -31,18 +33,14 @@ test("TC01 - Verify users can buy an item successfully", async ({
     await accountPage.selectDepartments(DEPARTMENTS.ELECTRONIC_COMPONENT_AND_SUPPLIES);
 
     // Step 5: Verify the items should be displayed as a grid
-    // const gridDisplayProductView = await productPage.getDisplayProductView('grid');
-    // await expect(gridDisplayProductView).toBeVisible();
-
     // Step 6: Switch view to list
-    // await productPage.changeDisplayView('list');
-
     // Step 7: Verify the items should be displayed as a list
-    // const listDisplayProductView = await productPage.getDisplayProductView('list');
-    // await expect(listDisplayProductView).toBeVisible();
-
     // Step 8: Select andy item randomly to purchase (DJI Mavic Pro Camera Drone)
-    await productPage.chooseProduct('DJI Mavic Pro Camera Drone');
+    // await productPage.chooseProduct('DJI Mavic Pro Camera Drone');
+    await productPage.chooseRandomPrd();
+    const prdName = await detailPage.getPrdName();
+    const prdQuantity = await detailPage.getQuantity();
+    const prdPrice = await detailPage.getPrice();
 
     // Step 9: Click 'Add to Cart'
     await detailPage.addToCart();
@@ -58,7 +56,7 @@ test("TC01 - Verify users can buy an item successfully", async ({
     await expect(page).toHaveTitle('Checkout – TestArchitect Sample Website');
 
     // Step 14: Verify item details in order
-    const itemOrdered = await checkoutPage.getItemOrdered('DJI Mavic Pro Camera Drone', 1);
+    const itemOrdered = await checkoutPage.getItemOrdered(prdName, prdQuantity);
     await expect(itemOrdered).toBeVisible();
 
     // Step 15: Fill the billing details with default payment method
@@ -71,6 +69,18 @@ test("TC01 - Verify users can buy an item successfully", async ({
     await expect(page).toHaveURL(/.*order-received.*/);
 
     // Step 18: Verify the Order details with billing and item information
-    const orderItem = await orderStatusPage.getItemName('DJI Mavic Pro Camera Drone');
-    await expect(orderItem).toBeVisible();
+    await expect(await orderStatusPage.getItemName(prdName)).toBeVisible();
+    expect(await orderStatusPage.getItemQuantity(prdName)).toEqual(`×${prdQuantity}`);
+    expect(await orderStatusPage.getItemPrice(prdName)).toEqual(`$${prdPrice}`);
+
+    expect(await orderStatusPage.billingAddress).toHaveText(RegExp( 
+        `^${billingDetails.firstName}
+        ${billingDetails.lastName}
+        ${billingDetails.StrAdd}
+        ${billingDetails.city}, \d+
+        ${billingDetails.zipCode}
+        ${billingDetails.phoneNum}
+        ${billingDetails.email}
+        $`
+    ))
 })

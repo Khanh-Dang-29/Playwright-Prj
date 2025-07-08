@@ -1,21 +1,29 @@
-import { Page } from "@playwright/test";
+import { Page, Locator } from "@playwright/test";
 import { MESSAGES } from "@data-test/Messages";
 
 export default class OrderStatusPage {
-    constructor(private page: Page) {}
+    readonly billingAddress: Locator;
+
+    constructor(private page: Page) {
+        this.billingAddress = this.page.locator('.woocommerce-customer-details address');
+    }
 
     async getItemName(productName: string) {
-        return this.page.getByText(`${productName}`);
+        return this.page.locator('.woocommerce-order-details').getByText(`${productName}`);
     }
 
-    async getItemQuantity(quantity: string) {
-        return this.page.getByText(`× ${quantity}`);
+    async getItemQuantity(productName: string) {
+        return (await this.page.locator('.order_item .product-name')
+        .filter({ hasText: productName })
+        .locator('.product-quantity').innerText()).replace(/\s+/g, '');
     }
 
-    async getOrderDetail(prodName: string) {
-        return this.page.locator(`//h2[text()='Order details']//following-sibling::table//a[text()='${prodName}']`);
+    async getItemPrice(productName: string) {
+        return (await this.page.locator('.order_item .product-name')
+        .filter({ hasText: productName })
+        .locator('.woocommerce-Price-amount').innerText());
     }
-
+    
     async getSuccessMsg() {
         return this.page.getByText(MESSAGES.ORDERS_SUCCESS_MESSAGE);
     }

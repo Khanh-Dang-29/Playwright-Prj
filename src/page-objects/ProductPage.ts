@@ -11,14 +11,11 @@ export default class ProductPage {
         this.closePopupBtn = page.getByRole('button', { name: 'Close' });
     }
 
-    // async getDisplayProductView(displayType: string) {
-    //     return this.productView = this.page.locator(`//div[contains(@class,'products-${displayType}')]`);
-    // }
-
-    // async changeDisplayView(displayType: string) {
-    //     this.changeViewBtn = this.page.locator(`//div[contains(@class,'switch-${displayType}')]`);
-    //     await this.changeViewBtn.click();
-    // }
+    async chooseRandomPrd() {
+        const count = await this.page.locator('.content-product').count();
+        const randomIndex = Math.floor(Math.random() * count);
+        await this.page.locator('.content-product .product-title').nth(randomIndex).click();
+    }
 
     async chooseProduct(productName: string) {
         await this.page.getByRole('link', { name: `${productName}`, exact: true }).click();
@@ -29,8 +26,6 @@ export default class ProductPage {
     }
 
     async getAllPrice() {
-        // await this.page.waitForSelector('.content-product ');
-        // await this.closePopupBtn.click();
         let price: number[] = [];
         
         const allPrices = await this.page.locator('.content-product ').count();
