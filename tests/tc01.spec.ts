@@ -73,14 +73,7 @@ test("TC01 - Verify users can buy an item successfully", async ({
     expect(await orderStatusPage.getItemQuantity(prdName)).toEqual(`×${prdQuantity}`);
     expect(await orderStatusPage.getItemPrice(prdName)).toEqual(`$${prdPrice}`);
 
-    expect(await orderStatusPage.billingAddress).toHaveText(RegExp( 
-        `^${billingDetails.firstName}
-        ${billingDetails.lastName}
-        ${billingDetails.StrAdd}
-        ${billingDetails.city}, \d+
-        ${billingDetails.zipCode}
-        ${billingDetails.phoneNum}
-        ${billingDetails.email}
-        $`
-    ))
+    expect(await orderStatusPage.getBillingAddress()).toMatch(( 
+        `^${billingDetails.firstName}${billingDetails.lastName}${billingDetails.StrAdd}${billingDetails.city}, \d+${billingDetails.zipCode}${billingDetails.phoneNum}${billingDetails.email}$`
+    ).replace(/\s+/g, ''));
 })

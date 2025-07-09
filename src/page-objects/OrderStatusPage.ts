@@ -31,4 +31,8 @@ export default class OrderStatusPage {
     async getOrderNumber() {
         return await this.page.locator('.order strong').innerText();
     }
+
+    async getBillingAddress() {
+        return (await this.billingAddress.innerText()).replace(/\s+/g, '');
+    }
 }
