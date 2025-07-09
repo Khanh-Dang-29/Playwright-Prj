@@ -7,6 +7,7 @@ export default class CartPage {
     readonly minusBtn: Locator;
     readonly title: Locator;
     readonly updateCartBtn: Locator;
+    readonly proceedToCheckoutBtn: Locator;
 
     constructor(private page: Page) {
         this.clearCartBtn = page.locator('.clear-cart');
@@ -14,6 +15,7 @@ export default class CartPage {
         this.minusBtn = page.locator('.minus');
         this.title = page.locator('.product-title');
         this.updateCartBtn = page.getByRole('button', { name: 'UPDATE CART' });
+        this.proceedToCheckoutBtn = page.getByRole('link', { name: 'PROCEED TO CHECKOUT' });
     }
 
     async verifyOrdersInTable() {
@@ -48,7 +50,7 @@ export default class CartPage {
     async getOrderItemPrice(prdName: string) {
         return await this.page.locator('tr')
         .filter({ 
-            has: this.page.getByRole('link', { name: `${prdName}` }) 
+            has: this.page.getByRole('link', { name: prdName }) 
         })
         .locator('.product-subtotal span bdi')
         .innerText();
@@ -60,5 +62,26 @@ export default class CartPage {
 
     async updateCart() {
         await this.updateCartBtn.click();
+    }
+
+    async clickProceedToCheckout() {
+        await this.proceedToCheckoutBtn.click();
+    }
+
+    async verifyItemOrdered(products: string[][]) {
+        for(let i = 0; i < products.length; i++) {
+            const actualItemListInfo = [];
+            const item = this.page.locator('.cart_item').nth(i);
+            const itemName = await item.locator('.product-title').innerText();
+            actualItemListInfo.push(itemName);
+
+            const itemPrice = await item.locator('.product-price .woocommerce-Price-amount').innerText();
+            actualItemListInfo.push(itemPrice);
+
+            const itemQuantity = await item.locator('.qty').getAttribute('value');
+            actualItemListInfo.push(itemQuantity);
+
+            expect(actualItemListInfo).toEqual(products[i]);
+        }
     }
 }

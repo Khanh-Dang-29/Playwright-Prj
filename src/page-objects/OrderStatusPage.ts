@@ -9,7 +9,7 @@ export default class OrderStatusPage {
     }
 
     async getItemName(productName: string) {
-        return this.page.locator('.woocommerce-order-details').getByText(`${productName}`);
+        return this.page.locator('.woocommerce-order-details').getByText(productName);
     }
 
     async getItemQuantity(productName: string) {

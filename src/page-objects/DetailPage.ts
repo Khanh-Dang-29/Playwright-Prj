@@ -20,6 +20,7 @@ export default class DetailPage {
 
     async addToCart() {
         await this.addToCartBtn.click();
+        await this.page.waitForSelector("[data-type='success']");
     }
 
     async clickCart() {
@@ -72,5 +73,9 @@ export default class DetailPage {
 
     async getReview() {
         return this.page.locator('.comment-text .description p').filter({ hasText: REVIEWS.PRD_REVIEW });
+    }
+
+    async getPrdInfoList() {
+        return [await this.getPrdName(), await this.getPrice(), await this.getQuantity()];
     }
 }

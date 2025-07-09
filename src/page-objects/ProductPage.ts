@@ -1,8 +1,6 @@
 import { Locator, Page } from "@playwright/test";
 
 export default class ProductPage {
-    // private productView: Locator;
-    // private changeViewBtn: Locator;
     readonly sortDropdown: Locator;
     readonly closePopupBtn: Locator;
 
@@ -18,11 +16,11 @@ export default class ProductPage {
     }
 
     async chooseProduct(productName: string) {
-        await this.page.getByRole('link', { name: `${productName}`, exact: true }).click();
+        await this.page.getByRole('link', { name: productName, exact: true }).click();
     }
 
     async sortItems(sort: string) {
-        await this.sortDropdown.selectOption(`${sort}`);
+        await this.sortDropdown.selectOption(sort);
     }
 
     async getAllPrice() {
@@ -31,8 +29,6 @@ export default class ProductPage {
         const allPrices = await this.page.locator('.content-product ').count();
 
         for(let i = 1; i <= allPrices; i++) {
-            // let priceCount = await this.page.locator('.content-product .price').filter({ hasNot: this.page.locator('del')}).nth(i).textContent();
-            // console.log(priceCount);
             const allPrice : string = await this.page.locator
             (`(//div[@class ='content-product '])[${i}]//span[@class ='woocommerce-Price-amount amount' and not(ancestor::del)]`).
             innerText();

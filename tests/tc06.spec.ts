@@ -23,8 +23,6 @@ test("TC06 - Verify users try to buy an item without logging in (As a guest)", a
     orderStatusPage
 }) => {
     // Step 1: Open https://demo.testarchitect.com/
-    await homePage.navigate();
-
     // Step 2: Navigate to 'Shop' or 'Products' section
     await accountPage.goToPage(PAGE_NAV.SHOP);
 

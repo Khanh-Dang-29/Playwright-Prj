@@ -16,10 +16,10 @@ export default class AccountPage {
     }
 
     async selectDepartments(dpName: string) {
-        await this.page.getByRole('link', { name: `${dpName}` }).click();
+        await this.page.getByRole('link', { name: dpName }).click();
     }
 
     async goToPage(pageName: string) {
-        await this.page.locator('#menu-main-menu-1').getByRole('link', { name: `${pageName}` }).click();
+        await this.page.locator('#menu-main-menu-1').getByRole('link', { name: pageName }).click();
     }
 }
