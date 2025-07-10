@@ -12,7 +12,7 @@ export default class ProductPage {
     async chooseRandomPrd() {
         const count = await this.page.locator('.content-product').count();
         const randomIndex = Math.floor(Math.random() * count);
-        await this.page.locator('.content-product .product-title').nth(randomIndex).click();
+        await this.page.locator('.content-product .product-title').nth(randomIndex).first().click();
     }
 
     async chooseProduct(productName: string) {

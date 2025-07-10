@@ -32,7 +32,7 @@ export default class CartPage {
     }
 
     async getOrderedItemQuantity(prdName: string) {
-        return await this.page.getByRole('spinbutton', { name: `${prdName} quantity` }).getAttribute('value');
+        return await this.page.getByRole('spinbutton', { name: `${prdName} quantity` });
     }
 
     async addQuantity() {

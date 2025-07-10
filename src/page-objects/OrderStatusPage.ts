@@ -8,20 +8,23 @@ export default class OrderStatusPage {
         this.billingAddress = this.page.locator('.woocommerce-customer-details address');
     }
 
-    async getItemName(productName: string) {
-        return this.page.locator('.woocommerce-order-details').getByText(productName);
+    async getItemName(productName: string): Promise<Locator> {
+        return this.page.locator('tr.order_item td.product-name')
+        .filter({ hasText: productName })
+        .locator('a');
+        // return this.page.locator('.woocommerce-order-details').getByText(productName);
     }
 
-    async getItemQuantity(productName: string) {
-        return (await this.page.locator('.order_item .product-name')
+    async getItemQuantity(productName: string): Promise<Locator> {
+        return this.page.locator('tr.order_item td.product-name')
         .filter({ hasText: productName })
-        .locator('.product-quantity').innerText()).replace(/\s+/g, '');
+        .locator('.product-quantity');
     }
 
-    async getItemPrice(productName: string) {
-        return (await this.page.locator('.order_item .product-name')
+    async getItemPrice(productName: string): Promise<Locator> {
+        return this.page.locator('tr.order_item')
         .filter({ hasText: productName })
-        .locator('.woocommerce-Price-amount').innerText());
+        .locator('span.woocommerce-Price-amount');
     }
     
     async getSuccessMsg() {
@@ -30,9 +33,5 @@ export default class OrderStatusPage {
 
     async getOrderNumber() {
         return await this.page.locator('.order strong').innerText();
-    }
-
-    async getBillingAddress() {
-        return (await this.billingAddress.innerText()).replace(/\s+/g, '');
     }
 }

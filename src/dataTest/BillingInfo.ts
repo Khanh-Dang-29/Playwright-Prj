@@ -5,6 +5,7 @@ export type BILLING_INFO = {
     StrAdd: string,
     city: string,
     state: string,
+    stateInShort: string,
     zipCode: string,
     phoneNum: string,
     email: string,

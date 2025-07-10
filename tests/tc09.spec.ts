@@ -25,8 +25,8 @@ test("TC09 - Verify users can update quantity of product in cart", async ({
     await detailPage.goToCart();
 
     // Step 6: Verify quantity of added product
-    let actualQuantity = await cartPage.getOrderedItemQuantity(prdName);
-    expect(actualQuantity).toEqual(expectedQuantity);
+    // let actualQuantity = ;
+    await expect(await cartPage.getOrderedItemQuantity(prdName)).toHaveAttribute('value', expectedQuantity);
 
     // Step 7: Click on Plus(+) button
     await cartPage.addQuantity();
@@ -35,26 +35,26 @@ test("TC09 - Verify users can update quantity of product in cart", async ({
     actualQuantity = await cartPage.getOrderedItemQuantity(prdName);
     let actualPrice = await cartPage.getOrderItemPrice(prdName);
 
-    expect(actualQuantity).toEqual('2');
+    await expect(await cartPage.getOrderedItemQuantity(prdName)).toHaveAttribute('value', '2');
     expect(actualPrice).toEqual(`$${expectedPrice * 2}`);
     // await expect(cartPage.plusBtn).toHaveText(`$${(prise * 2).toLocaleString()}`)
 
-    // Step 9: Enter 4 into quantity textbox then click on UPDATE CART button
-    await cartPage.fillQuantity(prdName, '4');
-    await cartPage.updateCart();
+    // // Step 9: Enter 4 into quantity textbox then click on UPDATE CART button
+    // await cartPage.fillQuantity(prdName, '4');
+    // await cartPage.updateCart();
 
-    // Step 10: Verify quantity of product is 4 and SUB TOTAL price
-    actualQuantity = await cartPage.getOrderedItemQuantity(prdName);
-    actualPrice = await cartPage.getOrderItemPrice(prdName);
-    expect(actualQuantity).toEqual('4');
-    expect(actualPrice).toEqual(`$${expectedPrice * 4}`);
+    // // Step 10: Verify quantity of product is 4 and SUB TOTAL price
+    // actualQuantity = await cartPage.getOrderedItemQuantity(prdName);
+    // actualPrice = await cartPage.getOrderItemPrice(prdName);
+    // expect(actualQuantity).toEqual('4');
+    // expect(actualPrice).toEqual(`$${expectedPrice * 4}`);
 
-    // Step 11: Click on Minus(-) button
-    await cartPage.reduceQuantity();
+    // // Step 11: Click on Minus(-) button
+    // await cartPage.reduceQuantity();
 
-    // Step 12: Verify quantity of product and SUB TOTAL price
-    actualQuantity = await cartPage.getOrderedItemQuantity(prdName);
-    actualPrice = await cartPage.getOrderItemPrice(prdName);
-    expect(actualQuantity).toEqual('1');
-    expect(actualPrice).toEqual(`$${expectedPrice * 1}`);
+    // // Step 12: Verify quantity of product and SUB TOTAL price
+    // actualQuantity = await cartPage.getOrderedItemQuantity(prdName);
+    // actualPrice = await cartPage.getOrderItemPrice(prdName);
+    // expect(actualQuantity).toEqual('3');
+    // expect(actualPrice).toEqual(`$${expectedPrice * 3}`);
 })

@@ -11,6 +11,7 @@ const billingDetails: BILLING_INFO = {
         phoneNum:'9876543210',
         zipCode: '123456789',
         state: 'California',
+        stateInShort: 'CA',
         email: process.env.USER_NAME!
 };
 

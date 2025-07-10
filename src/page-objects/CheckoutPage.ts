@@ -25,8 +25,14 @@ export default class CheckoutPage {
         this.placeOrderBtn = page.getByRole('button', { name: 'Place order' });
     }
 
-    async getItemOrdered(productName: string, quantity: string) {
-        return this.page.getByRole('cell', { name: `${productName}  × ${quantity}` });
+    async getItemOrdered() {
+        return this.page.locator('table.shop_table td.product-name');
+    }
+
+    async getItemOrderedPrice(prdName: string) {
+        return this.page.locator('table.shop_table tr')
+        .filter({ has: this.page.getByRole('cell', { name: prdName })})
+        .locator('span.woocommerce-Price-amount');
     }
 
     async fillBillingDetails(info: BILLING_INFO): Promise<void> {
@@ -42,6 +48,8 @@ export default class CheckoutPage {
 
     async placeOrder() {
         await this.placeOrderBtn.click();
+        await this.page.waitForSelector('form .blockOverlay');
+        await this.page.waitForSelector('form .blockOverlay', { state: 'detached' });
     }
 
     async choosePaymentMethod(method: string) {
@@ -53,8 +61,8 @@ export default class CheckoutPage {
     }
 
     async verifyFieldHighlighted(fields: string[]) {
-        for(let i = 0; i <= fields.length; i++) {
-            await expect(this.page.getByRole('textbox', { name: `${fields[i]} *` })).toHaveCSS('--et_inputs-border-color', COLORS.RED);
+        for(const field of fields) {
+            await expect(this.page.getByRole('textbox', { name: `${field} *` })).toHaveCSS('--et_inputs-border-color', COLORS.RED);
         }
     }
 }

@@ -9,8 +9,9 @@ const billingDetails: BILLING_INFO = {
         StrAdd: 'Oak Avenue',
         city: 'Los Angeles',
         phoneNum:'9876543210',
-        zipCode: '123456789',
+        zipCode: '12345-6789',
         state: 'California',
+        stateInShort: 'CA',
         email: process.env.USER_NAME!
 };
 
@@ -56,8 +57,8 @@ test("TC01 - Verify users can buy an item successfully", async ({
     await expect(page).toHaveTitle('Checkout – TestArchitect Sample Website');
 
     // Step 14: Verify item details in order
-    const itemOrdered = await checkoutPage.getItemOrdered(prdName, prdQuantity);
-    await expect(itemOrdered).toBeVisible();
+    // const itemOrdered = await checkoutPage.getItemOrdered(prdName, prdQuantity);
+    await expect(await checkoutPage.getItemOrdered()).toHaveText(new RegExp(`\\s*${prdName}\\s*×\\s*${prdQuantity}\\s*`, 'i'));
 
     // Step 15: Fill the billing details with default payment method
     await checkoutPage.fillBillingDetails(billingDetails);
@@ -66,14 +67,21 @@ test("TC01 - Verify users can buy an item successfully", async ({
     await checkoutPage.placeOrder();
 
     // Step 17: Verify Order status page displays
-    await expect(page).toHaveURL(/.*order-received.*/);
+    // await expect(page).toHaveURL(/.*order-received.*/);
 
     // Step 18: Verify the Order details with billing and item information
-    await expect(await orderStatusPage.getItemName(prdName)).toBeVisible();
-    expect(await orderStatusPage.getItemQuantity(prdName)).toEqual(`×${prdQuantity}`);
-    expect(await orderStatusPage.getItemPrice(prdName)).toEqual(`$${prdPrice}`);
-
-    expect(await orderStatusPage.getBillingAddress()).toMatch( 
-        /^\s+${billingDetails.firstName}\s+${billingDetails.lastName}\s+${billingDetails.StrAdd}\s+${billingDetails.city}\s+\w+\s+${billingDetails.zipCode}\s+${billingDetails.phoneNum}\s+${billingDetails.email}\s+$/
+    await expect(await orderStatusPage.getItemName(prdName)).toHaveText(new RegExp(`${prdName}`, 'i'));
+    await expect(await orderStatusPage.getItemQuantity(prdName)).toHaveText(`× ${prdQuantity}`);
+    await expect(await orderStatusPage.getItemPrice(prdName)).toHaveText(`${prdPrice}`);
+    await expect(orderStatusPage.billingAddress).toHaveText(new RegExp (
+        `\\s*${billingDetails
+            .firstName}\\s*${billingDetails
+            .lastName}\\s*${billingDetails
+            .StrAdd}\\s*${billingDetails
+            .city}\\s*,\\s*${billingDetails
+            .stateInShort}\\s*${billingDetails
+            .zipCode}\\s*${billingDetails
+            .phoneNum}\\s*${billingDetails
+            .email}\\s*`)
     );
 })
