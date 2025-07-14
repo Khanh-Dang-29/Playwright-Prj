@@ -11,7 +11,12 @@ test("TC08 - Verify users can clear the cart", async ({ page, homePage, loginPag
     await detailPage.addToCart();
 
     // Step 1: Open browser and go to https://demo.testarchitect.com/
+    await homePage.navigate();
+    
     // Step 2: Login with valid credentials 
+    await homePage.goToLoginPage();
+    await loginPage.login();
+
     // Step 3: Go to Shopping cart page
     await detailPage.goToCart(); 
 

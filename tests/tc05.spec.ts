@@ -27,6 +27,10 @@ test("TC05 - Verify orders appear in order history", async ({
     orderHistory
 }) => {
     // Step 1: Go to My Account page
+    await homePage.navigate();
+    await homePage.goToLoginPage();
+    await loginPage.login();
+
     // Step 2: Click on Orders in left navigation
     // Step 3: Verify order details (The orders are displayed in the user’s order history)
     await accountPage.goToPage(PAGE_NAV.SHOP);

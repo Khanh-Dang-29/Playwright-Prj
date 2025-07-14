@@ -25,7 +25,12 @@ test("TC03 - Verify users can buy an item using different payment methods (all p
     orderStatusPage
 }) => {
     // Step 1: Open browser and navigate to page
+    await homePage.navigate();
+
     // Step 2: Login with valid credentials
+    await homePage.goToLoginPage();
+    await loginPage.login();
+
     // Step 3: Go to Shop page
     await accountPage.goToPage(PAGE_NAV.SHOP);
 

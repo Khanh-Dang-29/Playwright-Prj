@@ -49,12 +49,6 @@ export default class DetailPage {
         return this.page.locator('.product_title').innerText();
     }
 
-    async priceInNumber() {
-        const price = await this.getPrice();
-        const numberOnly = price.replace(/[^0-9.]/g, '');
-        return parseFloat(numberOnly);
-    }
-
     async clickReview() {
         await this.reviewBtn.click();
     }
@@ -72,7 +66,7 @@ export default class DetailPage {
     }
 
     async getReview() {
-        return this.page.locator('.comment-text .description p').filter({ hasText: REVIEWS.PRD_REVIEW });
+        return this.page.locator('.comment-text .description p').getByText(REVIEWS.PRD_REVIEW, { exact: true } );
     }
 
     async getPrdInfoList() {

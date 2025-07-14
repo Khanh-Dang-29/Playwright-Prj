@@ -9,6 +9,7 @@ test("TC07 - Ensure proper error handling when mandatory fields are blank", asyn
     checkoutPage
 }) => {
     // Pre-condition:User is at checkout
+    await homePage.navigate();
     await accountPage.goToPage(PAGE_NAV.SHOP);
     await productPage.chooseProduct('iPad Air 2');
     await detailPage.addToCart();

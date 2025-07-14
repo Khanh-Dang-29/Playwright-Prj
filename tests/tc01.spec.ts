@@ -26,7 +26,12 @@ test("TC01 - Verify users can buy an item successfully", async ({
     orderStatusPage
 }) => {
     // Step 1: Open browser and navigate to page
+    await homePage.navigate();
+    
     // Step 2: Login with valid credentials
+    await homePage.goToLoginPage();
+    await loginPage.login();
+
     // Step 3: Navigate to All departments section
     await accountPage.navigateToAllDepartmentsDropdown();
 
