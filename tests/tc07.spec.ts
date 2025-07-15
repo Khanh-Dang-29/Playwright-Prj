@@ -1,5 +1,5 @@
-import { test, expect } from "@utils/fixtures";
-import { PAGE_NAV } from "@data-test/PageNav";
+import { test, expect } from "utils/fixtures";
+import { PAGE_NAV } from "data-test/PageNav";
 
 test("TC07 - Ensure proper error handling when mandatory fields are blank", async ({
     homePage,

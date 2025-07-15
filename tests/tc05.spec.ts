@@ -1,7 +1,7 @@
-import { test, expect } from "@utils/fixtures";
-import { BILLING_INFO } from "@data-test/BillingInfo";
-import { PAGE_NAV } from "@data-test/PageNav";
-import GetDate from "@actions/GetDate";
+import { test, expect } from "utils/fixtures";
+import { BILLING_INFO } from "data-test/BillingInfo";
+import { PAGE_NAV } from "data-test/PageNav";
+import GetDate from "actions/GetDate";
 
 const billingDetails: BILLING_INFO = {
         firstName: 'Alice',

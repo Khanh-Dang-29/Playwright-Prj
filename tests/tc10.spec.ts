@@ -1,6 +1,6 @@
-import { test, expect } from "@utils/fixtures";
-import { PAGE_NAV } from "@data-test/PageNav";
-import { REVIEWS } from "@data-test/Reviews";
+import { test, expect } from "utils/fixtures";
+import { PAGE_NAV } from "data-test/PageNav";
+import { REVIEWS } from "data-test/Reviews";
 
 test("Verify users can post a review", async ({
     homePage,

@@ -1,5 +1,5 @@
-import { test, expect } from "@utils/fixtures";
-import { PAGE_NAV } from "@data-test/PageNav";
+import { test, expect } from "utils/fixtures";
+import { PAGE_NAV } from "data-test/PageNav";
 
 test("TC08 - Verify users can clear the cart", async ({ page, homePage, loginPage, accountPage, productPage, detailPage, cartPage }) => {
     // Pre-conditions: User added the items into cart

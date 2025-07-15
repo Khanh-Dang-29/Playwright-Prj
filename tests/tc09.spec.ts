@@ -1,6 +1,6 @@
-import { test, expect } from "@utils/fixtures";
-import { PAGE_NAV } from "@data-test/PageNav";
-import ConvertToNumber from "@actions/ConvertToNumber";
+import { test, expect } from "utils/fixtures";
+import { PAGE_NAV } from "data-test/PageNav";
+import ConvertToNumber from "actions/ConvertToNumber";
 
 test("TC09 - Verify users can update quantity of product in cart", async ({
     homePage,
