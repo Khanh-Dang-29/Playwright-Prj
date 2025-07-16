@@ -2,21 +2,15 @@ import { Locator, Page } from "@playwright/test";
 import { REVIEWS } from "data-test/Reviews";
 
 export default class DetailPage {
-    readonly addToCartButton: Locator;
-    readonly cartButton: Locator;
-    readonly checkoutButton: Locator;
-    readonly reviewButton: Locator;
-    readonly reviewTextbox: Locator;
-    readonly submitReviewButton: Locator;
+    readonly addToCartButton: Locator = this.page.getByRole('button', { name: 'Add to cart' });
+    readonly cartButton: Locator = this.page.getByRole('link').filter({ hasText: '$' });
+    readonly checkoutButton: Locator= this.page.getByRole('link', { name: 'checkout' });
+    readonly reviewButton: Locator = this.page.locator('#tab_reviews');
+    readonly reviewTextbox: Locator = this.page.getByRole('textbox', { name: 'Your review *' });
+    readonly submitReviewButton: Locator = this.page.getByRole('button', { name: 'Submit' });
+    readonly review: Locator = this.page.locator('.comment-text .description p').getByText(REVIEWS.PRD_REVIEW, { exact: true } );
 
-    constructor(private page: Page) {
-        this.addToCartButton = page.getByRole('button', { name: 'Add to cart' });
-        this.cartButton = page.getByRole('link').filter({ hasText: '$' });
-        this.checkoutButton = page.getByRole('link', { name: 'checkout' });
-        this.reviewButton = page.locator('#tab_reviews');
-        this.reviewTextbox = page.getByRole('textbox', { name: 'Your review *'});
-        this.submitReviewButton = page.getByRole('button', { name: 'Submit' })
-    }
+    constructor(private page: Page) {}
 
     async addToCart() {
         await this.addToCartButton.click();
@@ -63,10 +57,6 @@ export default class DetailPage {
 
     async submitReview() {
         await this.submitReviewButton.click();
-    }
-
-    getReview() {
-        return this.page.locator('.comment-text .description p').getByText(REVIEWS.PRD_REVIEW, { exact: true } );
     }
 
     async getPrdInfoList() {

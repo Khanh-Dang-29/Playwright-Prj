@@ -3,31 +3,19 @@ import { BILLING_INFO } from "data-test/BillingInfo";
 import { COLORS } from "data-test/Colors";
 
 export default class CheckoutPage {
-    readonly firstName: Locator;
-    readonly lastName: Locator;
-    readonly country: Locator;
-    readonly streetAddress: Locator;
-    readonly city: Locator;
-    readonly phoneNum: Locator;
-    readonly zipCode: Locator;
-    readonly email: Locator;
-    readonly placeOrderBtn: Locator;
+    readonly firstNameTextbox: Locator = this.page.getByRole('textbox', { name: 'First name *' });
+    readonly lastNameTextbox: Locator = this.page.getByRole('textbox', { name: 'Last name *' });
+    readonly countryDropdown: Locator= this.page.getByLabel('Country / Region *');
+    readonly streetAddressTextbox: Locator = this.page.getByRole('textbox', { name: 'Street address *' });
+    readonly cityTextbox: Locator = this.page.getByRole('textbox', { name: 'Town / City *' });
+    readonly phoneNumTextbox: Locator = this.page.getByRole('textbox', { name: 'Phone *' });
+    readonly zipCodeTextbox: Locator = this.page.getByRole('textbox', { name: 'ZIP Code *' });
+    readonly emailTextbox: Locator = this.page.getByRole('textbox', { name: 'Email address *' });
+    readonly placeOrderButton: Locator = this.page.getByRole('button', { name: 'Place order' });
+    readonly itemOrderedInOrderTable: Locator = this.page.locator('table.shop_table td.product-name');
+    readonly errorMessage: Locator = this.page.getByRole('alert');
     
-    constructor(private page: Page) {
-        this.firstName = page.getByRole('textbox', { name: 'First name *' });
-        this.lastName = page.getByRole('textbox', { name: 'Last name *' });
-        this.country = page.getByLabel('Country / Region *');
-        this.streetAddress = page.getByRole('textbox', { name: 'Street address *' });
-        this.city = page.getByRole('textbox', { name: 'Town / City *' });
-        this.zipCode = page.getByRole('textbox', { name: 'ZIP Code *' });
-        this.phoneNum = page.getByRole('textbox', { name: 'Phone *' });
-        this.email = page.getByRole('textbox', { name: 'Email address *' });
-        this.placeOrderBtn = page.getByRole('button', { name: 'Place order' });
-    }
-
-    getItemOrdered() {
-        return this.page.locator('table.shop_table td.product-name');
-    }
+    constructor(private page: Page) {}
 
     async getItemOrderedPrice(prdName: string) {
         return this.page.locator('table.shop_table tr')
@@ -36,28 +24,24 @@ export default class CheckoutPage {
     }
 
     async fillBillingDetails(info: BILLING_INFO): Promise<void> {
-        await this.firstName.fill(info.firstName);
-        await this.lastName.fill(info.lastName);
-        await this.country.selectOption(info.country);
-        await this.streetAddress.fill(info.StrAdd);
-        await this.city.fill(info.city);
-        await this.zipCode.fill(info.zipCode);
-        await this.phoneNum.fill(info.phoneNum);
-        await this.email.fill(info.email);
+        await this.firstNameTextbox.fill(info.firstName);
+        await this.lastNameTextbox.fill(info.lastName);
+        await this.countryDropdown.selectOption(info.country);
+        await this.streetAddressTextbox.fill(info.StrAdd);
+        await this.cityTextbox.fill(info.city);
+        await this.zipCodeTextbox.fill(info.zipCode);
+        await this.phoneNumTextbox.fill(info.phoneNum);
+        await this.emailTextbox.fill(info.email);
     }
 
     async placeOrder() {
-        await this.placeOrderBtn.click();
+        await this.placeOrderButton.click();
         await this.page.waitForSelector('form .blockOverlay');
         await this.page.waitForSelector('form .blockOverlay', { state: 'detached' });
     }
 
     async choosePaymentMethod(method: string) {
         await this.page.getByText(`${method}`).click();
-    }
-
-    getErrMsg() {
-        return this.page.getByRole('alert');
     }
 
     async verifyFieldHighlighted(fields: string[]) {

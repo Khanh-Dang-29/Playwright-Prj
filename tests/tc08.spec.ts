@@ -32,5 +32,5 @@ test("TC08 - Verify users can clear the cart", async ({
     await cartPage.clearCart();
 
     // Step 6: Verify empty cart page displays
-    await expect(cartPage.getEmptyCartMsg()).toBeVisible();
+    await expect(cartPage.emptyCartMessage).toBeVisible();
 })

@@ -61,7 +61,7 @@ test("TC01 - Verify users can buy an item successfully", async ({
     await expect(page).toHaveTitle('Checkout – TestArchitect Sample Website');
 
     // Step 14: Verify item details in order
-    await expect(checkoutPage.getItemOrdered()).toHaveText(new RegExp(`\\s*${prdName}\\s*×\\s*${prdQuantity}\\s*`, 'i'));
+    await expect(checkoutPage.itemOrderedInOrderTable).toHaveText(new RegExp(`\\s*${prdName}\\s*×\\s*${prdQuantity}\\s*`, 'i'));
 
     // Step 15: Fill the billing details with default payment method
     await checkoutPage.fillBillingDetails(billingDetails);

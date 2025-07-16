@@ -2,11 +2,10 @@ import { Page, Locator } from "@playwright/test";
 import { MESSAGES } from "data-test/Messages";
 
 export default class OrderStatusPage {
-    readonly billingAddress: Locator;
+    readonly billingAddress: Locator = this.page.locator('.woocommerce-customer-details address');
+    readonly sussessMessage: Locator = this.page.getByText(MESSAGES.ORDERS_SUCCESS_MESSAGE);
 
-    constructor(private page: Page) {
-        this.billingAddress = this.page.locator('.woocommerce-customer-details address');
-    }
+    constructor(private page: Page) {}
 
     getItemName(productName: string) {
         return this.page.locator('tr.order_item td.product-name')
@@ -24,10 +23,6 @@ export default class OrderStatusPage {
         return this.page.locator('tr.order_item')
         .filter({ hasText: productName })
         .locator('span.woocommerce-Price-amount');
-    }
-    
-    getSuccessMsg() {
-        return this.page.getByText(MESSAGES.ORDERS_SUCCESS_MESSAGE);
     }
 
     getOrderNumber() {

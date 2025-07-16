@@ -2,21 +2,15 @@ import { Locator, Page, expect } from "@playwright/test";
 import { MESSAGES } from "data-test/Messages";
 
 export default class CartPage {
-    readonly clearCartButton: Locator;
-    readonly plusButton: Locator;
-    readonly minusButton: Locator;
-    readonly title: Locator;
-    readonly updateCartBtn: Locator;
-    readonly proceedToCheckoutButton: Locator;
+    readonly clearCartButton: Locator = this.page.locator('.clear-cart');
+    readonly plusButton: Locator = this.page.locator('.plus');
+    readonly minusButton: Locator = this.page.locator('.minus');
+    readonly title: Locator = this.page.locator('.product-title');
+    readonly updateCartBtn: Locator = this.page.getByRole('button', { name: 'UPDATE CART' });
+    readonly proceedToCheckoutButton: Locator = this.page.getByRole('link', { name: 'PROCEED TO CHECKOUT' });
+    readonly emptyCartMessage: Locator = this.page.getByRole('heading', { name: MESSAGES.EMPTY_CART_MESSAGE });
 
-    constructor(private page: Page) {
-        this.clearCartButton = page.locator('.clear-cart');
-        this.plusButton = page.locator('.plus');
-        this.minusButton = page.locator('.minus');
-        this.title = page.locator('.product-title');
-        this.updateCartBtn = page.getByRole('button', { name: 'UPDATE CART' });
-        this.proceedToCheckoutButton = page.getByRole('link', { name: 'PROCEED TO CHECKOUT' });
-    }
+    constructor(private page: Page) {}
 
     async verifyOrdersInTable() {
         const cartItems =  await this.page.locator('.table-responsive table tbody tr.cart_item').count();
@@ -25,10 +19,6 @@ export default class CartPage {
 
     async clearCart() {
         await this.clearCartButton.click();
-    }
-
-    getEmptyCartMsg() {
-        return this.page.getByRole('heading', { name: MESSAGES.EMPTY_CART_MESSAGE });
     }
 
     getOrderedItemQuantity(prdName: string) {

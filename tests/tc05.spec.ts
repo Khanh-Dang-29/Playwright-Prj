@@ -1,6 +1,7 @@
 import { test } from "utils/fixtures";
 import { BILLING_INFO } from "data-test/BillingInfo";
 import { PAGE_NAV } from "data-test/PageNav";
+import ItemOrderUtils from "actions/ItemOrderedUtils";
 
 const billingDetails: BILLING_INFO = {
         firstName: 'Alice',
@@ -16,17 +17,18 @@ const billingDetails: BILLING_INFO = {
 };
 
 test("TC05 - Verify orders appear in order history", async ({ 
+    page,
     homePage,
     loginPage,
     accountPage,
-    productPage,
     orderHistory
 }) => {
     // Pre-conditions: User has placed 02 orders
     await homePage.navigate();
     await homePage.goToLoginPage();
     await loginPage.login();
-    const ordNumList = await productPage.addRandomPrd(2, billingDetails);
+    const itemOrderUtils = new ItemOrderUtils(page);
+    const ordNumList = await itemOrderUtils.orderRandomPrd(2, billingDetails);
 
     // Step 1: Go to My Account page
     await homePage.goToMyAccountPage();
