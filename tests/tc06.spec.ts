@@ -41,5 +41,5 @@ test("TC06 - Verify users try to buy an item without logging in (As a guest)", a
     await checkoutPage.fillBillingDetails(billingDetails);
     await checkoutPage. placeOrder();
 
-    await expect(await orderStatusPage.getSuccessMsg()).toBeVisible();
+    await expect(orderStatusPage.getSuccessMsg()).toBeVisible();
 })

@@ -1,21 +1,21 @@
 import { Locator, Page, expect } from "@playwright/test";
-import { MESSAGES } from "@data-test/Messages";
+import { MESSAGES } from "data-test/Messages";
 
 export default class CartPage {
-    readonly clearCartBtn: Locator;
-    readonly plusBtn: Locator;
-    readonly minusBtn: Locator;
+    readonly clearCartButton: Locator;
+    readonly plusButton: Locator;
+    readonly minusButton: Locator;
     readonly title: Locator;
     readonly updateCartBtn: Locator;
-    readonly proceedToCheckoutBtn: Locator;
+    readonly proceedToCheckoutButton: Locator;
 
     constructor(private page: Page) {
-        this.clearCartBtn = page.locator('.clear-cart');
-        this.plusBtn = page.locator('.plus');
-        this.minusBtn = page.locator('.minus');
+        this.clearCartButton = page.locator('.clear-cart');
+        this.plusButton = page.locator('.plus');
+        this.minusButton = page.locator('.minus');
         this.title = page.locator('.product-title');
         this.updateCartBtn = page.getByRole('button', { name: 'UPDATE CART' });
-        this.proceedToCheckoutBtn = page.getByRole('link', { name: 'PROCEED TO CHECKOUT' });
+        this.proceedToCheckoutButton = page.getByRole('link', { name: 'PROCEED TO CHECKOUT' });
     }
 
     async verifyOrdersInTable() {
@@ -24,25 +24,25 @@ export default class CartPage {
     }
 
     async clearCart() {
-        await this.clearCartBtn.click();
+        await this.clearCartButton.click();
     }
 
-    async getEmptyCartMsg() {
+    getEmptyCartMsg() {
         return this.page.getByRole('heading', { name: MESSAGES.EMPTY_CART_MESSAGE });
     }
 
-    async getOrderedItemQuantity(prdName: string) {
-        return await this.page.getByRole('spinbutton', { name: `${prdName} quantity` });
+    getOrderedItemQuantity(prdName: string) {
+        return this.page.getByRole('spinbutton', { name: `${prdName} quantity` });
     }
 
     async addQuantity() {
-        await this.plusBtn.click();
+        await this.plusButton.click();
         await this.page.waitForSelector('form .blockOverlay');
         await this.page.waitForSelector('form .blockOverlay', { state: 'detached' });
     }
 
     async reduceQuantity() {
-        await this.minusBtn.click();
+        await this.minusButton.click();
         await this.page.waitForSelector('form .blockOverlay');
         await this.page.waitForSelector('form .blockOverlay', { state: 'detached' });
     }
@@ -62,10 +62,12 @@ export default class CartPage {
 
     async updateCart() {
         await this.updateCartBtn.click();
+        await this.page.waitForSelector('form .blockOverlay');
+        await this.page.waitForSelector('form .blockOverlay', { state: 'detached' });
     }
 
     async clickProceedToCheckout() {
-        await this.proceedToCheckoutBtn.click();
+        await this.proceedToCheckoutButton.click();
     }
 
     async verifyItemOrdered(products: string[][]) {

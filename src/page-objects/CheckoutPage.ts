@@ -1,6 +1,6 @@
 import { Locator, Page, expect } from "@playwright/test";
-import { BILLING_INFO } from "@data-test/BillingInfo";
-import { COLORS } from "@data-test/Colors";
+import { BILLING_INFO } from "data-test/BillingInfo";
+import { COLORS } from "data-test/Colors";
 
 export default class CheckoutPage {
     readonly firstName: Locator;
@@ -25,7 +25,7 @@ export default class CheckoutPage {
         this.placeOrderBtn = page.getByRole('button', { name: 'Place order' });
     }
 
-    async getItemOrdered() {
+    getItemOrdered() {
         return this.page.locator('table.shop_table td.product-name');
     }
 
@@ -56,7 +56,7 @@ export default class CheckoutPage {
         await this.page.getByText(`${method}`).click();
     }
 
-    async getErrMsg() {
+    getErrMsg() {
         return this.page.getByRole('alert');
     }
 

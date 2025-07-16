@@ -1,5 +1,5 @@
 export const DEPARTMENTS = {
-    AUTOMOBILES_AND_MOTOCYCLES: 'Automobiles & Motocyles',
+    AUTOMOBILES_AND_MOTORCYCLES: 'Automobiles & Motorcycles',
     CAR_ELECTRONICS: 'Car Electronics',
     MOBILE_PHONE_ACCESSORIES: 'Mobile Phone Accessories',
     COMPUTER_AND_OFFICE: 'Computer & Office',

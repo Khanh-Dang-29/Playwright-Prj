@@ -1,12 +1,22 @@
 import { Locator, Page } from "@playwright/test";
+import { BILLING_INFO } from "data-test/BillingInfo";
+import { PAGE_NAV } from "data-test/PageNav";
+import AccountPage from "./AccountPage";
+import DetailPage from "./DetailPage";
+import CheckoutPage from "./CheckoutPage";
+import OrderStatusPage from "./OrderStatusPage";
 
 export default class ProductPage {
     readonly sortDropdown: Locator;
-    readonly closePopupBtn: Locator;
+    readonly closePopupButton: Locator;
+    readonly detailPage = new DetailPage(this.page);
+    readonly checkoutPage = new CheckoutPage(this.page);
+    readonly orderStatusPage = new OrderStatusPage(this.page);
+    readonly accountPage = new AccountPage(this.page);
 
     constructor(private page: Page) {
         this.sortDropdown = page.getByRole('combobox', { name: 'Shop order' });
-        this.closePopupBtn = page.getByRole('button', { name: 'Close' });
+        this.closePopupButton = page.getByRole('button', { name: 'Close' });
     }
 
     async chooseRandomPrd() {
@@ -55,5 +65,26 @@ export default class ProductPage {
             console.log('Cannot sort with value given!');
         }
         return sorted;
+    }
+
+    async addRandomPrd(numOfPrd: number, info: BILLING_INFO): Promise<string[][]> {
+        const prdNum: string[][] = [];
+        for(let i = 0; i < numOfPrd; i++) {
+            await this.accountPage.goToPage(PAGE_NAV.SHOP);
+            await this.chooseRandomPrd();
+            const prdName = await this.detailPage.getPrdName();
+            await this.detailPage.addToCart();
+            await this.detailPage.clickCart();
+            await this.detailPage.clickCheckout();
+            await this.checkoutPage.fillBillingDetails(info);
+            await this.checkoutPage.placeOrder();
+            const prdInfo: string[] = [
+                await this.orderStatusPage.getOrderNumber(),
+                await (await this.orderStatusPage.getItemPrice(prdName)).innerText(),
+                (await (await this.orderStatusPage.getItemQuantity(prdName)).innerText()).replace(/[^0-9]/g, ''),
+            ]
+            prdNum.push(prdInfo);
+        }
+        return prdNum;
     }
 }

@@ -50,5 +50,5 @@ test("TC03 - Verify users can buy an item using different payment methods (all p
     await checkoutPage.placeOrder();
 
     // Step 8: Verify order confirmation message
-    await expect(await orderStatusPage.getSuccessMsg()).toBeVisible();
+    await expect(orderStatusPage.getSuccessMsg()).toBeVisible();
 })

@@ -58,5 +58,5 @@ test("TC02 - Verify users can buy multiple item successfully", async ({
     await checkoutPage.placeOrder();
 
     // // Step 7: Verify order confirmation message
-    await expect(await orderStatusPage.getSuccessMsg()).toBeVisible();
+    await expect(orderStatusPage.getSuccessMsg()).toBeVisible();
 })
