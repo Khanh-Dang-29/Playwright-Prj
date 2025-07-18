@@ -1,5 +1,5 @@
 import { Locator, Page, expect } from "@playwright/test";
-import { BILLING_INFO } from "data-test/BillingInfo";
+import BILLING_INFO from "data-test/BillingInfo";
 import { COLORS } from "data-test/Colors";
 
 export default class CheckoutPage {
@@ -23,7 +23,7 @@ export default class CheckoutPage {
         .locator('span.woocommerce-Price-amount');
     }
 
-    async fillBillingDetails(info: BILLING_INFO): Promise<void> {
+    async fillBillingDetails(info: typeof BILLING_INFO): Promise<void> {
         await this.firstNameTextbox.fill(info.firstName);
         await this.lastNameTextbox.fill(info.lastName);
         await this.countryDropdown.selectOption(info.country);

@@ -1,4 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
+import { time } from 'console';
 import dotenv from 'dotenv';
 
 /**
@@ -27,7 +28,7 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   /* Reporter to use. See https://playwright.dev/docs/test-reporters */
   reporter: 'html',
-  timeout: 90000,
+  timeout: 90_000,
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
@@ -37,6 +38,8 @@ export default defineConfig({
     trace: 'on-first-retry',
 
     screenshot: 'only-on-failure',
+
+    actionTimeout: 30_000,
   },
 
   /* Configure projects for major browsers */

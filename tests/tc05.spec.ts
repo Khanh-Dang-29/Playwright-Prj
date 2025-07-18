@@ -1,20 +1,7 @@
 import { test } from "utils/fixtures";
-import { BILLING_INFO } from "data-test/BillingInfo";
 import { PAGE_NAV } from "data-test/PageNav";
+import BILLING_INFO from "data-test/BillingInfo";
 import ItemOrderUtils from "actions/ItemOrderedUtils";
-
-const billingDetails: BILLING_INFO = {
-        firstName: 'Alice',
-        lastName: 'Smith',
-        country: 'United States (US)',
-        StrAdd: 'Oak Avenue',
-        city: 'Los Angeles',
-        phoneNum:'9876543210',
-        zipCode: '123456789',
-        state: 'California',
-        stateInShort: 'CA',
-        email: process.env.USER_NAME!
-};
 
 test("TC05 - Verify orders appear in order history", async ({ 
     page,
@@ -28,7 +15,7 @@ test("TC05 - Verify orders appear in order history", async ({
     await homePage.goToLoginPage();
     await loginPage.login();
     const itemOrderUtils = new ItemOrderUtils(page);
-    const ordNumList = await itemOrderUtils.orderRandomPrd(2, billingDetails);
+    const ordNumList = await itemOrderUtils.orderRandomPrd(2, BILLING_INFO);
 
     // Step 1: Go to My Account page
     await homePage.goToMyAccountPage();
@@ -37,5 +24,5 @@ test("TC05 - Verify orders appear in order history", async ({
     await accountPage.selectPage(PAGE_NAV.ORDERS);
 
     // Step 3: Verify order details (The orders are displayed in the user’s order history)
-    await orderHistory.verifyOrderHistory(ordNumList);               
+    await orderHistory.verifyOrderHistory(ordNumList);
 })

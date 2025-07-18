@@ -8,7 +8,8 @@ test("TC08 - Verify users can clear the cart", async ({
     accountPage,
     productPage,
     detailPage,
-    cartPage }) => {
+    cartPage 
+}) => {
     // Pre-conditions: User added the items into cart
     await homePage.navigate();
     await homePage.goToLoginPage();

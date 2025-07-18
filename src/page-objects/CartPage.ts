@@ -21,10 +21,13 @@ export default class CartPage {
         await this.clearCartButton.click();
     }
 
-    getOrderedItemQuantity(prdName: string) {
+    getOrderedItemQuantity(prdName: string): Locator {
         return this.page.getByRole('spinbutton', { name: `${prdName} quantity` });
     }
 
+    /**
+     * Adds one to the quantity of the selected product in the cart.
+     */
     async addQuantity() {
         await this.plusButton.click();
         await this.page.waitForSelector('form .blockOverlay');

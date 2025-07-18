@@ -1,19 +1,6 @@
 import { test, expect } from "utils/fixtures";
 import { DEPARTMENTS } from "data-test/Departments";
-import { BILLING_INFO } from "data-test/BillingInfo";
-
-const billingDetails: BILLING_INFO = {
-        firstName: 'Alice',
-        lastName: 'Smith',
-        country: 'United States (US)',
-        StrAdd: 'Oak Avenue',
-        city: 'Los Angeles',
-        phoneNum:'9876543210',
-        zipCode: '12345-6789',
-        state: 'California',
-        stateInShort: 'CA',
-        email: process.env.USER_NAME!
-};
+import BILLING_INFO from "data-test/BillingInfo";
 
 test("TC01 - Verify users can buy an item successfully", async ({ 
     page,
@@ -64,7 +51,7 @@ test("TC01 - Verify users can buy an item successfully", async ({
     await expect(checkoutPage.itemOrderedInOrderTable).toHaveText(new RegExp(`\\s*${prdName}\\s*×\\s*${prdQuantity}\\s*`, 'i'));
 
     // Step 15: Fill the billing details with default payment method
-    await checkoutPage.fillBillingDetails(billingDetails);
+    await checkoutPage.fillBillingDetails(BILLING_INFO);
 
     // Step 16: Click on PLACE ORDER
     await checkoutPage.placeOrder();
@@ -77,14 +64,14 @@ test("TC01 - Verify users can buy an item successfully", async ({
     await expect(orderStatusPage.getItemQuantity(prdName)).toHaveText(`× ${prdQuantity}`);
     await expect(orderStatusPage.getItemPrice(prdName)).toHaveText(`${prdPrice}`);
     await expect(orderStatusPage.billingAddress).toHaveText(new RegExp (
-        `\\s*${billingDetails
-            .firstName}\\s*${billingDetails
-            .lastName}\\s*${billingDetails
-            .StrAdd}\\s*${billingDetails
-            .city}\\s*,\\s*${billingDetails
-            .stateInShort}\\s*${billingDetails
-            .zipCode}\\s*${billingDetails
-            .phoneNum}\\s*${billingDetails
+        `\\s*${BILLING_INFO
+            .firstName}\\s*${BILLING_INFO
+            .lastName}\\s*${BILLING_INFO
+            .StrAdd}\\s*${BILLING_INFO
+            .city}\\s*,\\s*${BILLING_INFO
+            .stateInShort}\\s*${BILLING_INFO
+            .zipCode}\\s*${BILLING_INFO
+            .phoneNum}\\s*${BILLING_INFO
             .email}\\s*`)
     );
 })

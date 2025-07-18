@@ -1,6 +1,6 @@
 import { Page } from "@playwright/test";
-import { BILLING_INFO } from "data-test/BillingInfo";
 import { PAGE_NAV } from "data-test/PageNav";
+import BILLING_INFO from "data-test/BillingInfo";
 import AccountPage from "pages/AccountPage";
 import ProductPage from "pages/ProductPage";
 import DetailPage from "pages/DetailPage";
@@ -23,7 +23,7 @@ export default class ItemOrderUtils {
      * @param info - Billing information for the orders.
      * @returns A list of arrays containing order number, price, and quantity for each order.
      */
-    async orderRandomPrd(numOfPrd: number, info: BILLING_INFO): Promise<string[][]> {
+    async orderRandomPrd(numOfPrd: number, info: typeof BILLING_INFO): Promise<string[][]> {
         const prdNum: string[][] = [];
         for(let i = 0; i < numOfPrd; i++) {
             await this.accountPage.goToPage(PAGE_NAV.SHOP);

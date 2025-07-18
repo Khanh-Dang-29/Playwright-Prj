@@ -1,19 +1,6 @@
 import { test, expect } from "utils/fixtures";
 import { PAGE_NAV } from "data-test/PageNav";
-import { BILLING_INFO } from "data-test/BillingInfo";
-
-const billingDetails: BILLING_INFO = {
-        firstName: 'Alice',
-        lastName: 'Smith',
-        country: 'United States (US)',
-        StrAdd: 'Oak Avenue',
-        city: 'Los Angeles',
-        phoneNum:'9876543210',
-        zipCode: '123456789',
-        state: 'California',
-        stateInShort: 'CA',
-        email: process.env.USER_NAME!
-};
+import BILLING_INFO from "data-test/BillingInfo";
 
 test("TC03 - Verify users can buy an item using different payment methods (all payment methods)", async ({
     homePage,
@@ -46,9 +33,9 @@ test("TC03 - Verify users can buy an item using different payment methods (all p
     await checkoutPage.choosePaymentMethod('Direct bank transfer');
 
     // Step 7: Complete the payment process
-    await checkoutPage.fillBillingDetails(billingDetails);
+    await checkoutPage.fillBillingDetails(BILLING_INFO);
     await checkoutPage.placeOrder();
 
     // Step 8: Verify order confirmation message
-    await expect(orderStatusPage.getSuccessMsg()).toBeVisible();
+    await expect(orderStatusPage.successMessage).toBeVisible();
 })
